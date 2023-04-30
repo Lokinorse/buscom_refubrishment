@@ -24,5 +24,5 @@ export const Refubrishment = () => {
   }, []);
 
   // Render your component UI
-  return <h1>Переоборудование QUERY!!</h1>;
+  return <h1>Переоборудование QUERY!!!</h1>;
 };
