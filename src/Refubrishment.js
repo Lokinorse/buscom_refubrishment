@@ -1,24 +1,17 @@
 import React, { useEffect } from "react";
-import axios from "axios";
+import { Step } from "./components/Step";
+import { useRefubrishmentQueries } from "./services/useRefubrishmentServices";
 
 export const Refubrishment = () => {
-  useEffect(() => {
-    axios
-      .get(
-        "https://www.bus-com.ru/index.php?route=information/refubrishment/getCategoryData",
-        {
-          params: {
-            category_id: 90,
-          },
-        }
-      )
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Error: " + error.message);
-      });
-  }, []);
-
-  return <h1>Переоборудование QUERY!!!</h1>;
+  console.log(1);
+  const { steps } = useRefubrishmentQueries();
+  console.log(2);
+  return (
+    <div class="container">
+      <h1>Переоборудование 2.0</h1>
+      {steps.map((step) => {
+        return <Step step={step} key={step.order} />;
+      })}
+    </div>
+  );
 };
