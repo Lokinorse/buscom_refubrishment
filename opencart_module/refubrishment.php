@@ -26,53 +26,10 @@ class ControllerInformationRefubrishment extends Controller {
         // Render the page
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/information/refubrishment.tpl', $data));
     }
-    public function getCategoryData() {
-        if (isset($this->request->get['category_id'])) {
-            $category_id = (int)$this->request->get['category_id'];
-            $this->load->model('catalog/category');
-            $category_info = $this->model_catalog_category->getCategory($category_id);
-            $this->response->addHeader('Content-Type: application/json');
-            if (($this->request->server['REQUEST_METHOD'] == 'GET') && isset($this->request->server['HTTP_ORIGIN'])) {
-                $this->response->addHeader('Access-Control-Allow-Origin: ' . $this->request->server['HTTP_ORIGIN']);
-                $this->response->addHeader('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
-                $this->response->addHeader('Access-Control-Max-Age: 1000');
-                $this->response->addHeader('Access-Control-Allow-Credentials: true');
-                $this->response->addHeader('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
-                $headers = getallheaders();
-            };
-            $this->response->setOutput(json_encode($category_info));
-        } else {
-            echo 'cant see query params :(';
-            $this->response->setOutput('');
-        }
-    }
-    public function getProductsByCategoryId($category_id) {
-        $category_id = (int)$this->request->get['category_id'];
-        $this->response->addHeader('Content-Type: application/json');
-        if (($this->request->server['REQUEST_METHOD'] == 'GET') && isset($this->request->server['HTTP_ORIGIN'])) {
-            $this->response->addHeader('Access-Control-Allow-Origin: ' . $this->request->server['HTTP_ORIGIN']);
-            $this->response->addHeader('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
-            $this->response->addHeader('Access-Control-Max-Age: 1000');
-            $this->response->addHeader('Access-Control-Allow-Credentials: true');
-            $this->response->addHeader('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
-            $headers = getallheaders();
-        };
-        $this->load->model('catalog/product');
-        $filter_data = array(
-            'filter_category_id' => $category_id
-        );
-        $products = array();
-        $results = $this->model_catalog_product->getProducts($filter_data);
-        foreach ($results as $result) {
-            $products[] = array('product_id' => $result['product_id'], 'name' => $result['name'], 'price' => $result['price'],);
-        }
-        $this->response->setOutput(json_encode($results));
-        return $products;
-    }
-
     public function getConstructorData() {
         $this->response->addHeader('Content-Type: application/json');
-        $this->response->addHeader('Access-Control-Allow-Origin: https://bus-com.ru');
+        // TODO: SET NEXT HEADER TO 'https://bus-com.ru' AFTER THE END OF DEV
+        $this->response->addHeader('Access-Control-Allow-Origin: *');
         $this->response->addHeader('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
         $this->response->addHeader('Access-Control-Max-Age: 1000');
         $this->response->addHeader('Access-Control-Allow-Credentials: true');
@@ -103,7 +60,6 @@ class ControllerInformationRefubrishment extends Controller {
     
             $data['categories'][] = $currentCat;
         }
-    
         $this->response->setOutput(json_encode($data));
     }
 }
