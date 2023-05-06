@@ -5,9 +5,7 @@ import { Refubrishment } from "./Refubrishment";
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <Refubrishment />
-      </header>
+      <Refubrishment />
     </div>
   );
 }

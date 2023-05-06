@@ -3,15 +3,19 @@ import { Step } from "./components/Step";
 import { useRefubrishmentQueries } from "./services/useRefubrishmentServices";
 
 export const Refubrishment = () => {
-  console.log(1);
   const { steps } = useRefubrishmentQueries();
-  console.log(2);
+  console.log("steps", steps);
   return (
     <div class="container">
       <h1>Переоборудование 2.0</h1>
-      {steps.map((step) => {
-        return <Step step={step} key={step.order} />;
-      })}
+      <div class="calculator_wrapper">
+        <div class="calculator">
+          {steps.map((step) => {
+            return <Step step={step} key={step.order} />;
+          })}
+        </div>
+        <div class="total"></div>
+      </div>
     </div>
   );
 };
