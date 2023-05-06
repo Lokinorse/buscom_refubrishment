@@ -1,11 +1,21 @@
 import React from "react";
 
-export const Options = ({ options }) => {
+export const Options = ({ options, setSelectedOption, activeOptionId }) => {
   return (
-    <ul>
+    <div class="options_wrapper">
       {options.map((option) => (
-        <li key={option.product_id}>{option.name}</li>
+        <div
+          className={
+            option.product_id === activeOptionId
+              ? "active_option option"
+              : "option"
+          }
+          onClick={() => setSelectedOption(option)}
+          key={option.product_id}
+        >
+          {option.name}
+        </div>
       ))}
-    </ul>
+    </div>
   );
 };
