@@ -1,46 +1,63 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Options } from "./Options";
+import { SelectedOption } from "./SelectedOption";
 import { find } from "lodash";
 
-const htmlDecode = (content) => {
-  let e = document.createElement("div");
-  e.innerHTML = content;
-  return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
-};
-
-export const Step = ({ step }) => {
+export const Step = ({ step, setTotalData }) => {
   const { name, products, sort_order } = step;
-  console.log("step", step);
   const [selectedOption, setSelectedOption] = useState(
     find(products, { name: "Нет" })
   );
-  // TODO: CHANGE IMAGE SRC PATH TO RELATIVE
+
+  const setCountToTotalData = useCallback(
+    (val) => {
+      setTotalData((prevState) => ({
+        ...prevState,
+        [step.category_id]: {
+          ...prevState[step.category_id],
+          selected_option: {
+            ...prevState[step.category_id].selected_option,
+            count: val,
+          },
+        },
+      }));
+    },
+    [setTotalData]
+  );
+
+  useEffect(() => {
+    setTotalData((prev) => {
+      if (selectedOption.name === "Нет") {
+        if (!prev[step.category_id]) return prev;
+        const updatedPrev = { ...prev };
+        delete updatedPrev[step.category_id];
+        return updatedPrev;
+      }
+      const totalProperties = {
+        cat_name: name,
+        selected_option: {
+          price: selectedOption.price,
+          name: selectedOption.name,
+        },
+      };
+      return { ...prev, [step.category_id]: totalProperties };
+    });
+  }, [selectedOption]);
+
   return (
-    <div class="card_wrapper">
-      <h3 class="card_title">{`Шаг ${sort_order}. ${name}`}</h3>
-      <div class="card_content_wrapper">
+    <div className="card_wrapper">
+      <h3 className="card_title">{`Шаг ${sort_order}. ${name}`}</h3>
+      <div className="card_content_wrapper">
         <Options
           options={products}
           setSelectedOption={setSelectedOption}
           activeOptionId={selectedOption.product_id}
         />
-        <div class="card_selected_option_content">
-          <h4>{`${name}: ${selectedOption.name}`}</h4>
-          <div class="img_wrapper">
-            <img src={`https://bus-com.ru/image/${selectedOption.image}`}></img>
-          </div>
-          {selectedOption.name !== "Нет" && (
-            <>
-              <div class="product_price">{selectedOption.price}</div>
-              <div
-                class="product_description"
-                dangerouslySetInnerHTML={{
-                  __html: htmlDecode(selectedOption.description),
-                }}
-              />
-            </>
-          )}
-        </div>
+        <SelectedOption
+          stepName={name}
+          selectedOption={selectedOption}
+          setCountToTotalData={setCountToTotalData}
+        />
       </div>
     </div>
   );

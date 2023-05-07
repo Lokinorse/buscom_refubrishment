@@ -2,7 +2,7 @@ import React from "react";
 
 export const Options = ({ options, setSelectedOption, activeOptionId }) => {
   return (
-    <div class="options_wrapper">
+    <div className="options_wrapper">
       {options.map((option) => (
         <div
           className={
