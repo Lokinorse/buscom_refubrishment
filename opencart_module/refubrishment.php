@@ -39,12 +39,46 @@ class ControllerInformationRefubrishment extends Controller {
         $this->load->model('catalog/product');
         $cats = $this->model_catalog_category->getCategories(89);
         $data['categories'] = [];
-    
-        foreach ($cats as $cat_id => $category) {
+
+
+        
+        //seats (step 1)
+        $seatsCat = new stdClass();
+        $seatsCat->sort_order = '1';
+        $seatsCat->name = 'Установка сидений';
+        $seatsCat->category_id = '89';
+        $seatsCat->products = [];
+        // get options for Seats
+        $noOption = $this->model_catalog_product->getProduct('352');
+        $inturistSeat = $this->model_catalog_product->getProduct('249');
+        $inturistSeatLux = $this->model_catalog_product->getProduct('205');
+        
+
+        // get options for options for you can select option while selecting option
+        $inturistSeatOptions = $this->model_catalog_product->getProductOptions($inturistSeat['product_id']);
+        $inturistSeatLuxOptions = $this->model_catalog_product->getProductOptions($inturistSeatLux['product_id']);
+        $inturistSeat['options'] = $inturistSeatOptions;
+        $inturistSeatLux['options'] = $inturistSeatLuxOptions;
+
+        $inturistSeat['description'] = $inturistSeat['meta_description'];
+        $inturistSeatLux['description'] = $inturistSeatLux['meta_description'];
+        $seatsCat->products[] = $noOption;
+        
+        // add options for Seats
+        $seatsCat->products[] = $inturistSeat;
+        $seatsCat->products[] = $inturistSeatLux;
+        // add Seats to categories
+        $data['categories'][] = $seatsCat;
+
+
+
+        foreach ($cats as $category) {
+            if ($category['category_id'] === '91') {
+                continue;
+            }
             $productsInTheCat = $this->model_catalog_product->getProducts(['filter_category_id' => $category['category_id']]);
             $currentCat = $category;
             $currentCat['products'] = [];
-    
             foreach ($productsInTheCat as $prod_id => $product) {
                 $opts = $this->model_catalog_product->getProductImages($product['product_id']);
                 $product['price'] = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')));
@@ -59,7 +93,8 @@ class ControllerInformationRefubrishment extends Controller {
             }
     
             $data['categories'][] = $currentCat;
-        }
+        }        
         $this->response->setOutput(json_encode($data));
+
     }
 }

@@ -6,7 +6,6 @@ import { useRefubrishmentQueries } from "./services/useRefubrishmentServices";
 export const Refubrishment = () => {
   const { steps } = useRefubrishmentQueries();
   const [totalData, setTotalData] = useState({});
-  console.log("totalData", totalData);
   return (
     <div className="container">
       <h1>Переоборудование 2.0</h1>

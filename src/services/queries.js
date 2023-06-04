@@ -10,7 +10,12 @@ export const queries = {
         }
       )
       .then((response) => {
-        setAllConstructorData(response.data.categories);
+        if (!response.data.categories) return;
+        setAllConstructorData(
+          response.data.categories.sort((prev, curr) => {
+            return prev.sort_order - curr.sort_order;
+          })
+        );
       })
       .catch((error) => {
         console.error("Error: " + error.message);

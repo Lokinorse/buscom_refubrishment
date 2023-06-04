@@ -1,5 +1,6 @@
 import React from "react";
 import { CountInput } from "./CountInput";
+import { ProductOption } from "./ProductOption";
 
 const htmlDecode = (content) => {
   let e = document.createElement("div");
@@ -32,6 +33,7 @@ export const SelectedOption = ({
       {selectedOption.options && selectedOption.options.length > 0 && (
         <div className="current-picked-opts">
           {selectedOption.options.map((option) => {
+            console.log("OPTION", option);
             if (option.name === "Установка количества") {
               return (
                 <CountInput
@@ -42,7 +44,9 @@ export const SelectedOption = ({
                 />
               );
             }
-            return null;
+            return (
+              <ProductOption option={option} key={option.product_option_id} />
+            );
           })}
         </div>
       )}

@@ -11,8 +11,6 @@ import { queries } from "./queries";
 // стекла 99
 // Мультимедиа: 100
 
-// it is hardcode yet, but better option would be fetch this list as children of category 'uslugi' via endpoint
-
 export const useRefubrishmentQueries = () => {
   const [allConstructorData, setAllConstructorData] = useState([]);
 
