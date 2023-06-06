@@ -25,6 +25,22 @@ export const Step = ({ step, setTotalData }) => {
     [setTotalData]
   );
 
+  const setOptionsToTotalData = useCallback(
+    (id, optionName, option) => {
+      setTotalData((prevState) => ({
+        ...prevState,
+        [step.category_id]: {
+          ...prevState[step.category_id],
+          additional_options: {
+            ...prevState[step.category_id].additional_options,
+            [id]: { ...option, option_name: optionName },
+          },
+        },
+      }));
+    },
+    [setTotalData]
+  );
+
   useEffect(() => {
     setTotalData((prev) => {
       if (selectedOption.name === "Нет") {
@@ -57,6 +73,7 @@ export const Step = ({ step, setTotalData }) => {
           stepName={name}
           selectedOption={selectedOption}
           setCountToTotalData={setCountToTotalData}
+          setOptionsToTotalData={setOptionsToTotalData}
         />
       </div>
     </div>

@@ -12,6 +12,7 @@ export const SelectedOption = ({
   stepName,
   selectedOption,
   setCountToTotalData,
+  setOptionsToTotalData,
 }) => {
   return (
     <div className="card_selected_option_content">
@@ -33,7 +34,6 @@ export const SelectedOption = ({
       {selectedOption.options && selectedOption.options.length > 0 && (
         <div className="current-picked-opts">
           {selectedOption.options.map((option) => {
-            console.log("OPTION", option);
             if (option.name === "Установка количества") {
               return (
                 <CountInput
@@ -45,7 +45,11 @@ export const SelectedOption = ({
               );
             }
             return (
-              <ProductOption option={option} key={option.product_option_id} />
+              <ProductOption
+                option={option}
+                key={option.product_option_id}
+                setOptionsToTotalData={setOptionsToTotalData}
+              />
             );
           })}
         </div>

@@ -1,10 +1,16 @@
 import React from "react";
+import { each } from "lodash";
 
-const reduceNumberFromString = (str) => {
-  if (typeof str === "number") return str;
-  const numberString = str.replace(/\s/g, "");
+const reduceNumberFromString = (price) => {
+  if (typeof price === "number") return price;
+  const numberString = price.replace(/\s/g, "");
   const number = parseInt(numberString);
   return number;
+};
+
+const getAdditionalOptionItemPrice = (option) => {
+  if (!option.quantity) return;
+  return option.quantity * reduceNumberFromString(option.price);
 };
 
 const getItemPriceString = (item) => {
@@ -19,8 +25,31 @@ const getItemPriceString = (item) => {
   }
 };
 
+const getTotal = (totalData) => {
+  let total = 0;
+  each(totalData, (item) => {
+    const additionalOptions = item.additional_options;
+    const itemPrice = reduceNumberFromString(item.selected_option.price);
+    const itemsCount = item.selected_option.count;
+    if (itemsCount) {
+      total += itemPrice * itemsCount;
+    } else {
+      total += itemPrice;
+    }
+    if (additionalOptions) {
+      each(additionalOptions, (option) => {
+        const additionalOptionCount = option.quantity;
+        const additionalOptionsPrice = reduceNumberFromString(option.price);
+        if (additionalOptionsPrice) {
+          total += additionalOptionsPrice * additionalOptionCount;
+        }
+      });
+    }
+  });
+  return total;
+};
+
 export const TotalWidget = ({ totalData }) => {
-  console.log("totalData", totalData);
   return (
     <div className="total_wrapper">
       <div className="total">
@@ -32,14 +61,43 @@ export const TotalWidget = ({ totalData }) => {
               <div className="ordered_item" key={item.cat_name}>
                 <div className="ordered_item_title">{item.cat_name}</div>
                 <div className="step_option">
-                  <div className="selected_option_name">
-                    {item.selected_option.name}
+                  <div className="price_position">
+                    <div className="selected_option_name">
+                      {item.selected_option.name}
+                    </div>
+                    <div className="selected_option_price">{itemPrice}</div>
                   </div>
-                  <div className="selected_option_price">{itemPrice}</div>
+                  <>
+                    {item?.additional_options
+                      ? Object.keys(item?.additional_options).map(
+                          (optionKey) => {
+                            const additionalOptionPrice =
+                              getAdditionalOptionItemPrice(
+                                item?.additional_options[optionKey]
+                              );
+                            if (!additionalOptionPrice) return null;
+                            return (
+                              <div className="price_position">
+                                <div className="selected_option_name">
+                                  {
+                                    item.additional_options[optionKey]
+                                      .option_name
+                                  }
+                                </div>
+                                <div className="selected_option_price">
+                                  {additionalOptionPrice}
+                                </div>
+                              </div>
+                            );
+                          }
+                        )
+                      : null}
+                  </>
                 </div>
               </div>
             );
           })}
+          ВСЕГО: {getTotal(totalData) + " ₽"}
         </div>
       </div>
     </div>

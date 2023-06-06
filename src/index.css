@@ -124,6 +124,12 @@ code {
 
 .step_option {
   display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.price_position {
+  display: flex;
 }
 
 @keyframes slide-in {
