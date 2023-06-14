@@ -3,7 +3,12 @@ import { Options } from "./Options";
 import { SelectedOption } from "./SelectedOption";
 import { find } from "lodash";
 
-export const Step = ({ step, setTotalData }) => {
+//option_value_id: "62" - подлокотник
+//option_value_id: "125" - откидная спинка
+
+const presetOptionsIds = { 62: "armrests", 125: "foldingSeats" };
+
+export const Step = ({ step, setTotalData, scheme }) => {
   const { name, products, sort_order } = step;
   const [selectedOption, setSelectedOption] = useState(
     find(products, { name: "Нет" })
@@ -27,6 +32,16 @@ export const Step = ({ step, setTotalData }) => {
 
   const setOptionsToTotalData = useCallback(
     (id, optionName, option) => {
+      // preset count to options from scheme if exists
+      if (
+        scheme.id != 9 &&
+        Object.keys(presetOptionsIds)
+          .map((item) => item + "")
+          .includes(option?.option_value_id)
+      ) {
+        option.quantity = scheme[presetOptionsIds[option?.option_value_id]];
+      }
+      console.log("OPTION", option);
       setTotalData((prevState) => ({
         ...prevState,
         [step.category_id]: {

@@ -49,7 +49,9 @@ const getTotal = (totalData) => {
   return total;
 };
 
-export const TotalWidget = ({ totalData }) => {
+export const TotalWidget = ({ totalData, scheme }) => {
+  const choosenSchemeText =
+    scheme.id !== 9 ? `Выбранная схема: ${scheme.title}` : "";
   return (
     <div className="total_wrapper">
       <div className="total">
@@ -76,13 +78,14 @@ export const TotalWidget = ({ totalData }) => {
                                 item?.additional_options[optionKey]
                               );
                             if (!additionalOptionPrice) return null;
+                            const additionalOption =
+                              item.additional_options[optionKey];
                             return (
                               <div className="price_position">
                                 <div className="selected_option_name">
-                                  {
-                                    item.additional_options[optionKey]
-                                      .option_name
-                                  }
+                                  {additionalOption.option_name +
+                                    " X " +
+                                    additionalOption.quantity}
                                 </div>
                                 <div className="selected_option_price">
                                   {additionalOptionPrice}
@@ -98,6 +101,18 @@ export const TotalWidget = ({ totalData }) => {
             );
           })}
           ВСЕГО: {getTotal(totalData) + " ₽"}
+        </div>
+        <div className="total_body">
+          {choosenSchemeText}
+          <div
+            className="scheme_choose_option_img"
+            style={{
+              height: "150px",
+              backgroundSize: "100% 100%",
+              backgroundRepeat: "no-repeat",
+              backgroundImage: `url(${require(`../assets/img/${scheme.img}`)})`,
+            }}
+          />
         </div>
       </div>
     </div>

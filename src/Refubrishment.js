@@ -7,6 +7,14 @@ export const Refubrishment = () => {
   const { steps } = useRefubrishmentQueries();
   const [scheme, setScheme] = useState(null);
   const [totalData, setTotalData] = useState({});
+
+  const setSchemeHandler = (chosenScheme) => {
+    setScheme(chosenScheme);
+    switch (chosenScheme.id) {
+      case 1:
+    }
+  };
+
   return (
     <div className="container">
       <h1>Переоборудование 2.0</h1>
@@ -17,16 +25,17 @@ export const Refubrishment = () => {
               return (
                 <Step
                   step={step}
+                  scheme={scheme}
                   key={step.category_id}
                   setTotalData={setTotalData}
                 />
               );
             })}
           </div>
-          <TotalWidget totalData={totalData} />
+          <TotalWidget totalData={totalData} scheme={scheme} />
         </div>
       ) : (
-        <SchemeChoose setScheme={setScheme} />
+        <SchemeChoose setScheme={setSchemeHandler} />
       )}
     </div>
   );

@@ -181,3 +181,39 @@ code {
 .product_option_select_options_wrapper {
   text-align: left;
 }
+
+.scheme_choose_options_wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+@media (max-width: 650px) {
+  .scheme_choose_options_wrapper {
+    flex-direction: column;
+  }
+}
+
+.scheme_choose_option {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid black;
+  width: 30%;
+  cursor: pointer;
+}
+
+@media (max-width: 1000px) {
+  .scheme_choose_option {
+    width: 45%;
+  }
+}
+
+@media (max-width: 650px) {
+  .scheme_choose_option {
+    width: 100%;
+  }
+}
+
+.scheme_choose_wrapper {
+  padding: 20px;
+}
