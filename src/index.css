@@ -25,6 +25,8 @@ code {
 }
 
 .total {
+  max-height: 80vh;
+  overflow: auto;
   text-align: left;
   background: white;
   display: flex;

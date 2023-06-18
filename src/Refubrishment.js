@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Step } from "./components/Step";
 import { TotalWidget, SchemeChoose } from "./components";
 import { useRefubrishmentQueries } from "./services/useRefubrishmentServices";
-
+//test
 export const Refubrishment = () => {
   const { steps } = useRefubrishmentQueries();
   const [scheme, setScheme] = useState(null);

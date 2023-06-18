@@ -41,7 +41,6 @@ export const Step = ({ step, setTotalData, scheme }) => {
       ) {
         option.quantity = scheme[presetOptionsIds[option?.option_value_id]];
       }
-      console.log("OPTION", option);
       setTotalData((prevState) => ({
         ...prevState,
         [step.category_id]: {
