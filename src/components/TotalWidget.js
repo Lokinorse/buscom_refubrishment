@@ -3,8 +3,8 @@ import { each } from "lodash";
 import { reduceNumberFromString } from "../utils/helpers";
 
 const getAdditionalOptionItemPrice = (option) => {
-  if (!option.quantity) return;
-  return option.quantity * reduceNumberFromString(option.price);
+  if (!option.count) return;
+  return option.count * reduceNumberFromString(option.price);
 };
 
 const getItemPriceString = (item) => {
@@ -32,7 +32,7 @@ const getTotal = (totalData) => {
     }
     if (additionalOptions) {
       each(additionalOptions, (option) => {
-        const additionalOptionCount = option.quantity;
+        const additionalOptionCount = option.count;
         const additionalOptionsPrice = reduceNumberFromString(option.price);
         if (additionalOptionsPrice) {
           total += additionalOptionsPrice * additionalOptionCount;
@@ -44,7 +44,6 @@ const getTotal = (totalData) => {
 };
 
 export const TotalWidget = ({ totalData, scheme, resetSchemeHandler }) => {
-  console.log("totalData", totalData);
   const choosenSchemeText =
     scheme.id !== 9 ? `Выбранная схема: ${scheme.title}` : "";
   const [showDialog, setShowDialog] = useState(false);
@@ -85,7 +84,7 @@ export const TotalWidget = ({ totalData, scheme, resetSchemeHandler }) => {
                                 <div className="selected_option_name">
                                   {additionalOption.option_name +
                                     " X " +
-                                    additionalOption.quantity}
+                                    additionalOption.count}
                                 </div>
                                 <div className="selected_option_price">
                                   {`${additionalOptionPrice} ₽`}

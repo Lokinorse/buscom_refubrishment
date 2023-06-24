@@ -10,16 +10,12 @@ export const Refubrishment = () => {
 
   const setSchemeHandler = (chosenScheme) => {
     setScheme(chosenScheme);
-    switch (chosenScheme.id) {
-      case 1:
-    }
   };
 
   const resetSchemeHandler = () => {
     setScheme(null);
     setTotalData({});
   };
-
   return (
     <div className="container">
       <h1>Переоборудование 2.0</h1>

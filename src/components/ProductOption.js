@@ -3,8 +3,16 @@ import { reduceNumberFromString } from "../utils/helpers";
 // values which was already preseted in scheme
 const presetOptionsIds = { 62: "armrests", 125: "foldingSeats" };
 
-const getProductOptionSchemeBasedQuantity = (scheme, optionValue) => {
-  if (scheme.id == 9) return 1;
+const getProductOptionSchemeBasedQuantity = (
+  scheme,
+  optionValue,
+  customSeatsCount
+) => {
+  if (scheme.id == 9) {
+    console.log("scheme was not chosen. customseatcount: ", customSeatsCount);
+    if (customSeatsCount) return customSeatsCount;
+    return 1;
+  }
   const schemeMultiplier = scheme.seats;
   // preset count to options from scheme if exists
   if (
@@ -19,7 +27,12 @@ const getProductOptionSchemeBasedQuantity = (scheme, optionValue) => {
   }
 };
 
-export const ProductOption = ({ option, setOptionsToTotalData, scheme }) => {
+export const ProductOption = ({
+  option,
+  setOptionsToTotalData,
+  scheme,
+  customSeatsCount,
+}) => {
   const [selectedValue, setSelectedValue] = useState("");
 
   const handleCheckboxChange = (event, optionId, optionName) => {
@@ -34,14 +47,15 @@ export const ProductOption = ({ option, setOptionsToTotalData, scheme }) => {
       <h3>{option.name}</h3>
       <div className="product_option_select_options_wrapper">
         {option.product_option_value.map((optionValue) => {
-          optionValue.quantity = getProductOptionSchemeBasedQuantity(
+          optionValue.count = getProductOptionSchemeBasedQuantity(
             scheme,
-            optionValue
+            optionValue,
+            customSeatsCount
           );
 
           const optionQuantityAndPricePostfix =
             optionValue.name !== "Нет"
-              ? ` X ${optionValue.quantity} (${reduceNumberFromString(
+              ? ` X ${optionValue.count} (${reduceNumberFromString(
                   optionValue.price
                 )} ₽)`
               : "";

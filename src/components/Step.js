@@ -65,12 +65,13 @@ export const Step = ({ step, setTotalData, scheme }) => {
   }, [selectedOption]);
 
   const setSelectedOptionHandler = (val) => {
+    const updatedSelectedOption = { ...val };
     if (step.name === "Установка сидений" && scheme.id != 9) {
-      val.quantity = scheme.seats;
-      setSelectedOption(val);
+      updatedSelectedOption.quantity = scheme.seats;
+      setSelectedOption(updatedSelectedOption);
       return;
     }
-    setSelectedOption(val);
+    setSelectedOption(updatedSelectedOption);
   };
 
   return (

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { CountInput } from "./CountInput";
 import { ProductOption } from "./ProductOption";
 
@@ -15,6 +15,7 @@ export const SelectedOption = ({
   setCountToTotalData,
   setOptionsToTotalData,
 }) => {
+  const [customSeatsCount, setCustomSeatsCount] = useState(1);
   return (
     <div className="card_selected_option_content">
       <h4>{`${stepName}: ${selectedOption.name}`}</h4>
@@ -34,6 +35,19 @@ export const SelectedOption = ({
       )}
       {selectedOption.options && selectedOption.options.length > 0 && (
         <div className="current-picked-opts">
+          {stepName === "Установка сидений" && scheme.id == 9 && (
+            <CountInput
+              key={selectedOption.options.length + 1}
+              option={{
+                name: "Количество",
+                value: 1,
+                price: selectedOption.price,
+              }}
+              selectedOption={selectedOption}
+              setCountToTotalData={setCountToTotalData}
+              setCustomSeatsCount={setCustomSeatsCount}
+            />
+          )}
           {selectedOption.options.map((option) => {
             if (option.name === "Установка количества") {
               return (
@@ -51,6 +65,11 @@ export const SelectedOption = ({
                 key={option.product_option_id}
                 setOptionsToTotalData={setOptionsToTotalData}
                 scheme={scheme}
+                customSeatsCount={
+                  stepName === "Установка сидений"
+                    ? customSeatsCount
+                    : undefined
+                }
               />
             );
           })}
