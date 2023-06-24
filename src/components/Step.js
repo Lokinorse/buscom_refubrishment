@@ -32,6 +32,8 @@ export const Step = ({ step, setTotalData, scheme }) => {
 
   const setOptionsToTotalData = useCallback(
     (id, optionName, option) => {
+      // multiplier for a common option
+      const schemeMultiplier = scheme.seats;
       // preset count to options from scheme if exists
       if (
         scheme.id != 9 &&
@@ -40,6 +42,8 @@ export const Step = ({ step, setTotalData, scheme }) => {
           .includes(option?.option_value_id)
       ) {
         option.quantity = scheme[presetOptionsIds[option?.option_value_id]];
+      } else {
+        option.quantity = schemeMultiplier;
       }
       setTotalData((prevState) => ({
         ...prevState,
@@ -52,7 +56,7 @@ export const Step = ({ step, setTotalData, scheme }) => {
         },
       }));
     },
-    [setTotalData]
+    [setTotalData, scheme]
   );
 
   useEffect(() => {
