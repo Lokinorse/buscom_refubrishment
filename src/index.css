@@ -227,4 +227,5 @@ dialog {
   margin-right: auto;
   top: 40%;
   width: 200px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }

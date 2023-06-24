@@ -44,6 +44,7 @@ const getTotal = (totalData) => {
 };
 
 export const TotalWidget = ({ totalData, scheme, resetSchemeHandler }) => {
+  console.log("totalData", totalData);
   const choosenSchemeText =
     scheme.id !== 9 ? `Выбранная схема: ${scheme.title}` : "";
   const [showDialog, setShowDialog] = useState(false);
