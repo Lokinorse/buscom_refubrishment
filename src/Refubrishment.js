@@ -15,6 +15,11 @@ export const Refubrishment = () => {
     }
   };
 
+  const resetSchemeHandler = () => {
+    setScheme(null);
+    setTotalData({});
+  };
+
   return (
     <div className="container">
       <h1>Переоборудование 2.0</h1>
@@ -32,7 +37,11 @@ export const Refubrishment = () => {
               );
             })}
           </div>
-          <TotalWidget totalData={totalData} scheme={scheme} />
+          <TotalWidget
+            totalData={totalData}
+            scheme={scheme}
+            resetSchemeHandler={resetSchemeHandler}
+          />
         </div>
       ) : (
         <SchemeChoose setScheme={setSchemeHandler} />

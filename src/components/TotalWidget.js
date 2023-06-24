@@ -1,12 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { each } from "lodash";
-
-const reduceNumberFromString = (price) => {
-  if (typeof price === "number") return price;
-  const numberString = price.replace(/\s/g, "");
-  const number = parseInt(numberString);
-  return number;
-};
+import { reduceNumberFromString } from "../utils/helpers";
 
 const getAdditionalOptionItemPrice = (option) => {
   if (!option.quantity) return;
@@ -49,9 +43,10 @@ const getTotal = (totalData) => {
   return total;
 };
 
-export const TotalWidget = ({ totalData, scheme }) => {
+export const TotalWidget = ({ totalData, scheme, resetSchemeHandler }) => {
   const choosenSchemeText =
     scheme.id !== 9 ? `Выбранная схема: ${scheme.title}` : "";
+  const [showDialog, setShowDialog] = useState(false);
   return (
     <div className="total_wrapper">
       <div className="total">
@@ -59,13 +54,17 @@ export const TotalWidget = ({ totalData, scheme }) => {
         <div className="total_body">
           {Object.values(totalData).map((item) => {
             const itemPrice = getItemPriceString(item);
+            const itemCountPostfix =
+              item.selected_option?.count && item.selected_option?.count > 1
+                ? `X ${item.selected_option.count}`
+                : "";
             return (
               <div className="ordered_item" key={item.cat_name}>
                 <div className="ordered_item_title">{item.cat_name}</div>
                 <div className="step_option">
                   <div className="price_position">
                     <div className="selected_option_name">
-                      {item.selected_option.name}
+                      {`${item.selected_option.name} ${itemCountPostfix}`}
                     </div>
                     <div className="selected_option_price">{itemPrice}</div>
                   </div>
@@ -88,7 +87,7 @@ export const TotalWidget = ({ totalData, scheme }) => {
                                     additionalOption.quantity}
                                 </div>
                                 <div className="selected_option_price">
-                                  {additionalOptionPrice}
+                                  {`${additionalOptionPrice} ₽`}
                                 </div>
                               </div>
                             );
@@ -113,6 +112,15 @@ export const TotalWidget = ({ totalData, scheme }) => {
               backgroundImage: `url(${require(`../assets/img/${scheme.img}`)})`,
             }}
           />
+          <button onClick={() => setShowDialog(true)}>Поменять схему</button>
+          <dialog open={showDialog ? "open" : false}>
+            <header>
+              <div>Выбранная вами схема не сохранится. Продолжить?</div>
+              <button onClick={resetSchemeHandler}>Да</button>
+              <button onClick={() => setShowDialog(false)}>Нет</button>
+            </header>
+            <section></section>
+          </dialog>
         </div>
       </div>
     </div>

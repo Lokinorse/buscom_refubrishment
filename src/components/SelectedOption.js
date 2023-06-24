@@ -10,6 +10,7 @@ const htmlDecode = (content) => {
 // TODO: CHANGE IMAGE SRC PATH TO RELATIVE
 export const SelectedOption = ({
   stepName,
+  scheme,
   selectedOption,
   setCountToTotalData,
   setOptionsToTotalData,
@@ -49,6 +50,7 @@ export const SelectedOption = ({
                 option={option}
                 key={option.product_option_id}
                 setOptionsToTotalData={setOptionsToTotalData}
+                scheme={scheme}
               />
             );
           })}

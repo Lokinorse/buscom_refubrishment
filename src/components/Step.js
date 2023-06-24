@@ -71,6 +71,7 @@ export const Step = ({ step, setTotalData, scheme }) => {
         cat_name: name,
         selected_option: {
           price: selectedOption.price,
+          count: selectedOption.quantity,
           name: selectedOption.name,
         },
       };
@@ -78,13 +79,22 @@ export const Step = ({ step, setTotalData, scheme }) => {
     });
   }, [selectedOption]);
 
+  const setSelectedOptionHandler = (val) => {
+    if (step.name === "Установка сидений" && scheme.id != 9) {
+      val.quantity = scheme.seats;
+      setSelectedOption(val);
+      return;
+    }
+    setSelectedOption(val);
+  };
+
   return (
     <div className="card_wrapper">
       <h3 className="card_title">{`Шаг ${sort_order}. ${name}`}</h3>
       <div className="card_content_wrapper">
         <Options
           options={products}
-          setSelectedOption={setSelectedOption}
+          setSelectedOption={setSelectedOptionHandler}
           activeOptionId={selectedOption.product_id}
         />
         <SelectedOption
@@ -92,6 +102,7 @@ export const Step = ({ step, setTotalData, scheme }) => {
           selectedOption={selectedOption}
           setCountToTotalData={setCountToTotalData}
           setOptionsToTotalData={setOptionsToTotalData}
+          scheme={scheme}
         />
       </div>
     </div>
