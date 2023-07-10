@@ -2,16 +2,19 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Options } from "./Options";
 import { SelectedOption } from "./SelectedOption";
 import { find } from "lodash";
+import { useNavigate } from "react-router-dom";
+import { useQueryParam } from "../utils/hooks";
 
 //option_value_id: "62" - подлокотник
 //option_value_id: "125" - откидная спинка
+
+//todo: remove react router dom
 
 export const Step = ({ step, setTotalData, scheme }) => {
   const { name, products, sort_order } = step;
   const [selectedOption, setSelectedOption] = useState(
     find(products, { name: "Нет" })
   );
-
   const setCountToTotalData = useCallback(
     (val) => {
       setTotalData((prevState) => ({
@@ -55,6 +58,7 @@ export const Step = ({ step, setTotalData, scheme }) => {
       const totalProperties = {
         cat_name: name,
         selected_option: {
+          product_id: selectedOption.product_id,
           price: selectedOption.price,
           count: selectedOption.quantity,
           name: selectedOption.name,
