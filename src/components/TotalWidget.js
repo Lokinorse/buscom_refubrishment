@@ -43,10 +43,23 @@ const getTotal = (totalData) => {
   return total;
 };
 
-export const TotalWidget = ({ totalData, scheme, resetSchemeHandler }) => {
+export const TotalWidget = ({
+  totalData,
+  scheme,
+  resetSchemeHandler,
+  urlConfig,
+}) => {
   const choosenSchemeText =
     scheme.id !== 9 ? `Выбранная схема: ${scheme.title}` : "";
   const [showDialog, setShowDialog] = useState(false);
+
+  const copyCurrentConfigURL = () => {
+    const currentURL = window.location.href;
+    navigator.clipboard
+      .writeText(currentURL + urlConfig)
+      .then(() => alert("Ссылка скопирована!"));
+  };
+
   return (
     <div className="total_wrapper">
       <div className="total">
@@ -113,6 +126,9 @@ export const TotalWidget = ({ totalData, scheme, resetSchemeHandler }) => {
             }}
           />
           <button onClick={() => setShowDialog(true)}>Поменять схему</button>
+          <button onClick={copyCurrentConfigURL}>
+            Скопировать ссылку на конфигурацию
+          </button>
           <dialog open={showDialog ? "open" : false}>
             <header>
               <div>Выбранная вами схема не сохранится. Продолжить?</div>

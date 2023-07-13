@@ -1,5 +1,5 @@
 import React from "react";
-const schemeOptions = [
+export const schemeOptions = [
   {
     id: 1,
     title: "14 мест",
