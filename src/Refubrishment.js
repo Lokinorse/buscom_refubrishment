@@ -9,21 +9,23 @@ import {
   hydrateState,
 } from "./utils/helpers";
 
+//TODO: Разрезолвить кейс, при котором ссылка копируется с изначально выставленным /?
+
 export const Refubrishment = () => {
   const { steps } = useRefubrishmentQueries();
   const [scheme, setScheme] = useState(null);
   const [totalData, setTotalData] = useState({});
   const [urlConfig, setUrlConfig] = useState("");
-
-  console.log("urlConfig", urlConfig);
+  console.log("totalData", totalData);
+  //console.log("urlConfig", urlConfig);
 
   //const [queryParam, updateQueryParam] = useQueryParam("config", "");
 
   useEffect(() => {
     const urlSearchParams = new URLSearchParams(window.location.search);
     const params = Object.fromEntries(urlSearchParams.entries());
-    hydrateState(params, setTotalData, setScheme);
-  }, []);
+    hydrateState(params, setTotalData, setScheme, steps);
+  }, [steps]);
 
   useEffect(() => {
     if (!scheme) {
@@ -59,6 +61,7 @@ export const Refubrishment = () => {
                   scheme={scheme}
                   key={step.category_id}
                   setTotalData={setTotalData}
+                  totalData={totalData}
                 />
               );
             })}

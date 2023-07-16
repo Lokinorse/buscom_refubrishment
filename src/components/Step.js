@@ -10,11 +10,39 @@ import { useQueryParam } from "../utils/hooks";
 
 //todo: remove react router dom
 
-export const Step = ({ step, setTotalData, scheme }) => {
+export const Step = ({ step, setTotalData, scheme, totalData }) => {
   const { name, products, sort_order } = step;
   const [selectedOption, setSelectedOption] = useState(
     find(products, { name: "Нет" })
   );
+
+  //console.log("step", step);
+
+  const setSelectedOptionHandler = (val) => {
+    const updatedSelectedOption = { ...val };
+    if (step.name === "Установка сидений" && scheme.id != 9) {
+      updatedSelectedOption.quantity = scheme.seats;
+      setSelectedOption(updatedSelectedOption);
+      return;
+    }
+    setSelectedOption(updatedSelectedOption);
+  };
+
+  useEffect(() => {
+    let currentSelectOption;
+    const currentStepInTotalData = totalData[Number(step.category_id)];
+    if (currentStepInTotalData) {
+      const currentSelectOptionId =
+        currentStepInTotalData.selected_option.product_id;
+      currentSelectOption = find(step.products, {
+        product_id: String(currentSelectOptionId),
+      });
+      if (!currentSelectOption) return;
+      if (selectedOption.product_id === currentSelectOption.product_id) return;
+      setSelectedOptionHandler(currentSelectOption);
+    }
+  }, [step, totalData]);
+
   const setCountToTotalData = useCallback(
     (val) => {
       setTotalData((prevState) => ({
@@ -67,16 +95,6 @@ export const Step = ({ step, setTotalData, scheme }) => {
       return { ...prev, [step.category_id]: totalProperties };
     });
   }, [selectedOption]);
-
-  const setSelectedOptionHandler = (val) => {
-    const updatedSelectedOption = { ...val };
-    if (step.name === "Установка сидений" && scheme.id != 9) {
-      updatedSelectedOption.quantity = scheme.seats;
-      setSelectedOption(updatedSelectedOption);
-      return;
-    }
-    setSelectedOption(updatedSelectedOption);
-  };
 
   return (
     <div className="card_wrapper">
