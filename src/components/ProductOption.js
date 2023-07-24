@@ -26,18 +26,27 @@ const getProductOptionSchemeBasedQuantity = (
   }
 };
 
+const getThisOptionInTotalData = (totalData, option, stepId) => {
+  if (
+    !totalData[stepId] ||
+    !totalData[stepId].additional_options ||
+    !totalData[stepId].additional_options[option.product_option_id]
+  )
+    return;
+  return totalData[stepId]?.additional_options[option.product_option_id];
+};
+
 export const ProductOption = ({
   option,
   setOptionsToTotalData,
   scheme,
   customSeatsCount,
+  totalData,
+  stepId,
 }) => {
-  const [selectedValue, setSelectedValue] = useState("");
-
   const handleCheckboxChange = (event, optionId, optionName) => {
     const valueString = event.target.value;
     const value = JSON.parse(valueString);
-    setSelectedValue(value);
     setOptionsToTotalData(optionId, optionName, value);
   };
 
@@ -58,6 +67,11 @@ export const ProductOption = ({
                   optionValue.price
                 )} ₽)`
               : "";
+          const thisOptionInTotalData = getThisOptionInTotalData(
+            totalData,
+            option,
+            stepId
+          );
           return (
             <div key={optionValue.product_option_value_id}>
               <label>
@@ -65,7 +79,7 @@ export const ProductOption = ({
                   type="checkbox"
                   value={JSON.stringify(optionValue)}
                   checked={
-                    selectedValue.product_option_value_id ===
+                    thisOptionInTotalData?.product_option_value_id ===
                     optionValue.product_option_value_id
                   }
                   onChange={(event) =>

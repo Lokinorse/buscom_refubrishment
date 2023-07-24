@@ -10,7 +10,6 @@ export const Step = ({ step, setTotalData, scheme, totalData }) => {
   const [selectedOption, setSelectedOption] = useState(
     find(products, { name: "Нет" })
   );
-
   const setSelectedOptionHandler = (val) => {
     const updatedSelectedOption = { ...val };
     if (step.name === "Установка сидений" && scheme.id != 9) {
@@ -106,6 +105,8 @@ export const Step = ({ step, setTotalData, scheme, totalData }) => {
           setCountToTotalData={setCountToTotalData}
           setOptionsToTotalData={setOptionsToTotalData}
           scheme={scheme}
+          totalData={totalData}
+          stepId={step.category_id}
         />
       </div>
     </div>

@@ -14,6 +14,8 @@ export const SelectedOption = ({
   selectedOption,
   setCountToTotalData,
   setOptionsToTotalData,
+  totalData,
+  stepId,
 }) => {
   const [customSeatsCount, setCustomSeatsCount] = useState(1);
   return (
@@ -65,6 +67,8 @@ export const SelectedOption = ({
                 key={option.product_option_id}
                 setOptionsToTotalData={setOptionsToTotalData}
                 scheme={scheme}
+                totalData={totalData}
+                stepId={stepId}
                 customSeatsCount={
                   stepName === "Установка сидений"
                     ? customSeatsCount

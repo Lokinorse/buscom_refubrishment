@@ -15,6 +15,7 @@ export const Refubrishment = () => {
   const { steps } = useRefubrishmentQueries();
   const [scheme, setScheme] = useState(null);
   const [totalData, setTotalData] = useState({});
+  console.log("totalData", totalData);
   const [urlConfig, setUrlConfig] = useState("");
   //const [queryParam, updateQueryParam] = useQueryParam("config", "");
 
