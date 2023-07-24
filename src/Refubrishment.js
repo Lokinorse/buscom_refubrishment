@@ -16,9 +16,6 @@ export const Refubrishment = () => {
   const [scheme, setScheme] = useState(null);
   const [totalData, setTotalData] = useState({});
   const [urlConfig, setUrlConfig] = useState("");
-  console.log("totalData", totalData);
-  //console.log("urlConfig", urlConfig);
-
   //const [queryParam, updateQueryParam] = useQueryParam("config", "");
 
   useEffect(() => {

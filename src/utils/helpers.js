@@ -8,31 +8,37 @@ export const reduceNumberFromString = (price) => {
 };
 
 const getAdditionalOptionsRaw = (inputString) => {
-  //const pattern = /ao(\d+)|ao_co(\d+)/g;
-  const pattern = /ao(\d+)|ao_co(\d+)/g;
+  const pattern = /ao(\d+)|ao_co(\d+)|ao_chsn_id(\d+)/g;
   const matches = inputString.match(pattern);
 
   const result = [];
-
   if (matches) {
     let currentId = null;
     let currentCount = null;
+    let chosenOptionId = null;
 
     for (const match of matches) {
       const idMatch = match.match(/ao(\d+)/);
       const countMatch = match.match(/ao_co(\d+)/);
-      const chosenValueMatch = match.m;
+      const chosenOptionIdMatch = match.match(/ao_chsn_id(\d+)/);
 
       if (idMatch) {
         currentId = Number(idMatch[1]);
       } else if (countMatch) {
         currentCount = Number(countMatch[1]);
+      } else if (chosenOptionIdMatch) {
+        chosenOptionId = Number(chosenOptionIdMatch[1]);
       }
 
-      if (currentId !== null && currentCount !== null) {
-        result.push({ id: currentId, count: currentCount });
+      if (
+        currentId !== null &&
+        currentCount !== null &&
+        chosenOptionId !== null
+      ) {
+        result.push({ id: currentId, count: currentCount, chosenOptionId });
         currentId = null;
         currentCount = null;
+        chosenOptionId = null;
       }
     }
   }
@@ -49,7 +55,15 @@ const getAdditionalOptions = (step, productId) => {
     const fullAdditionalOption = find(currentProduct?.options, {
       product_option_id: String(item.id),
     });
-    acc[item.id] = { ...fullAdditionalOption, count: item.count };
+    const { product_option_value, ...rest } = fullAdditionalOption;
+    const chosenValue = find(product_option_value, {
+      product_option_value_id: String(item.chosenOptionId),
+    });
+    acc[item.id] = {
+      ...chosenValue,
+      option_name: fullAdditionalOption.name,
+      count: item.count,
+    };
     return acc;
   }, {});
 };
@@ -136,11 +150,9 @@ export const hydrateState = (params, setTotalData, setScheme, steps) => {
   const stepsToTotalData = chosenSteps.map((step) => {
     const { id, count, name, price, additional_options } =
       getSelectedOptionFromQueryParams(step);
-
-    return {
+    const stepAugmented = {
       [step.category_id]: {
         cat_name: step.name,
-        additional_options,
         selected_option: {
           product_id: id,
           count,
@@ -149,6 +161,10 @@ export const hydrateState = (params, setTotalData, setScheme, steps) => {
         },
       },
     };
+    if (additional_options) {
+      stepAugmented[step.category_id].additional_options = additional_options;
+    }
+    return stepAugmented;
   });
   const hydratedTotalData = convertArrayToObject(stepsToTotalData);
   setTotalData(hydratedTotalData);

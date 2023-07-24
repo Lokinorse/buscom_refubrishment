@@ -2,11 +2,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Options } from "./Options";
 import { SelectedOption } from "./SelectedOption";
 import { find } from "lodash";
-import { useNavigate } from "react-router-dom";
-import { useQueryParam } from "../utils/hooks";
-
-//option_value_id: "62" - подлокотник
-//option_value_id: "125" - откидная спинка
 
 //todo: remove react router dom
 
@@ -15,8 +10,6 @@ export const Step = ({ step, setTotalData, scheme, totalData }) => {
   const [selectedOption, setSelectedOption] = useState(
     find(products, { name: "Нет" })
   );
-
-  //console.log("step", step);
 
   const setSelectedOptionHandler = (val) => {
     const updatedSelectedOption = { ...val };
@@ -83,7 +76,9 @@ export const Step = ({ step, setTotalData, scheme, totalData }) => {
         delete updatedPrev[step.category_id];
         return updatedPrev;
       }
+      const rest = { ...prev[step.category_id] };
       const totalProperties = {
+        ...rest,
         cat_name: name,
         selected_option: {
           product_id: selectedOption.product_id,

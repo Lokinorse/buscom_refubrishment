@@ -9,7 +9,6 @@ const getProductOptionSchemeBasedQuantity = (
   customSeatsCount
 ) => {
   if (scheme.id == 9) {
-    console.log("scheme was not chosen. customseatcount: ", customSeatsCount);
     if (customSeatsCount) return customSeatsCount;
     return 1;
   }
