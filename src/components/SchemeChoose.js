@@ -1,4 +1,6 @@
 import React from "react";
+import { ReactComponent as YourSvg } from "../assets/svg/scheme_choose_arrow.svg";
+
 export const schemeOptions = [
   {
     id: 1,
@@ -76,7 +78,6 @@ export const schemeOptions = [
 export const SchemeChoose = ({ setScheme }) => {
   return (
     <div className="scheme_choose_wrapper">
-      <div className="scheme_choose_title">Выберите схему салона</div>
       <div className="scheme_choose_options_wrapper">
         {schemeOptions.map((item) => {
           return (
@@ -85,15 +86,7 @@ export const SchemeChoose = ({ setScheme }) => {
               onClick={() => setScheme(item)}
             >
               <div className="scheme_choose_option_title">{item.title}</div>
-              <div
-                className="scheme_choose_option_img"
-                style={{
-                  height: "150px",
-                  backgroundSize: "100% 100%",
-                  backgroundRepeat: "no-repeat",
-                  backgroundImage: `url(${require(`../assets/img/${item.img}`)})`,
-                }}
-              />
+              <YourSvg />
             </div>
           );
         })}
