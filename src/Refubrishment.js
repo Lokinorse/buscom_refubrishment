@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Step } from "./components/Step";
 import { TotalWidget, SchemeChoose } from "./components";
 import { useRefubrishmentQueries } from "./services/useRefubrishmentServices";
-import { useQueryParam } from "./utils/hooks";
 import {
   concatSandTDStrings,
   getTotalDataQueryString,
@@ -14,6 +13,7 @@ import {
 export const Refubrishment = () => {
   const { steps } = useRefubrishmentQueries();
   const [scheme, setScheme] = useState(null);
+  console.log("scjee", scheme);
   const [totalData, setTotalData] = useState({});
   console.log("totalData", totalData);
   const [urlConfig, setUrlConfig] = useState("");
@@ -47,33 +47,41 @@ export const Refubrishment = () => {
     setTotalData({});
   };
   return (
-    <div className="container">
+    <div className="wrapper">
       <h1>Переоборудование 2.0</h1>
-      {scheme ? (
-        <div className="calculator_wrapper">
-          <div className="calculator">
-            {steps.map((step) => {
-              return (
-                <Step
-                  step={step}
-                  scheme={scheme}
-                  key={step.category_id}
-                  setTotalData={setTotalData}
-                  totalData={totalData}
-                />
-              );
-            })}
+      {scheme && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            padding: "0 10px",
+          }}
+        >
+          <div style={{ display: "flex" }}>
+            <div>Вы выбрали схему:</div>
+            <div>&nbsp;</div>
+            <div style={{ fontWeight: "bold" }}>{scheme.title}</div>
           </div>
-          <TotalWidget
-            totalData={totalData}
-            scheme={scheme}
-            resetSchemeHandler={resetSchemeHandler}
-            urlConfig={urlConfig}
-          />
+          <button>privet</button>
         </div>
-      ) : (
-        <SchemeChoose setScheme={setSchemeHandler} />
       )}
+      <div className="tiles_wrapper">
+        {scheme ? (
+          steps.map((step) => {
+            return (
+              <Step
+                step={step}
+                scheme={scheme}
+                key={step.category_id}
+                setTotalData={setTotalData}
+                totalData={totalData}
+              />
+            );
+          })
+        ) : (
+          <SchemeChoose setScheme={setSchemeHandler} />
+        )}
+      </div>
     </div>
   );
 };

@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Options } from "./Options";
 import { SelectedOption } from "./SelectedOption";
 import { find } from "lodash";
+import { MenuItem } from "./MenuItem";
+import { ProductCard } from "./ProductCard";
 
 //todo: remove react router dom
 
@@ -91,24 +93,29 @@ export const Step = ({ step, setTotalData, scheme, totalData }) => {
   }, [selectedOption]);
 
   return (
-    <div className="card_wrapper">
-      <h3 className="card_title">{`Шаг ${sort_order}. ${name}`}</h3>
-      <div className="card_content_wrapper">
-        <Options
-          options={products}
-          setSelectedOption={setSelectedOptionHandler}
-          activeOptionId={selectedOption.product_id}
-        />
-        <SelectedOption
-          stepName={name}
-          selectedOption={selectedOption}
-          setCountToTotalData={setCountToTotalData}
-          setOptionsToTotalData={setOptionsToTotalData}
-          scheme={scheme}
-          totalData={totalData}
-          stepId={step.category_id}
-        />
-      </div>
-    </div>
+    <MenuItem title={name}>
+      {products.map((product) => (
+        <ProductCard product={product} />
+      ))}
+      {/*       <div className="card_wrapper">
+        <h3 className="card_title">{`Шаг ${sort_order}. ${name}`}</h3>
+        <div className="card_content_wrapper">
+          <Options
+            options={products}
+            setSelectedOption={setSelectedOptionHandler}
+            activeOptionId={selectedOption.product_id}
+          />
+          <SelectedOption
+            stepName={name}
+            selectedOption={selectedOption}
+            setCountToTotalData={setCountToTotalData}
+            setOptionsToTotalData={setOptionsToTotalData}
+            scheme={scheme}
+            totalData={totalData}
+            stepId={step.category_id}
+          />
+        </div>
+      </div> */}
+    </MenuItem>
   );
 };

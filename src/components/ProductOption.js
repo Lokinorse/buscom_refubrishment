@@ -8,10 +8,6 @@ const getProductOptionSchemeBasedQuantity = (
   optionValue,
   customSeatsCount
 ) => {
-  if (scheme.id == 9) {
-    if (customSeatsCount) return customSeatsCount;
-    return 1;
-  }
   const schemeMultiplier = scheme.seats;
   // preset count to options from scheme if exists
   if (

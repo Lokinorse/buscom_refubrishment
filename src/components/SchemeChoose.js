@@ -1,6 +1,5 @@
 import React from "react";
-import { ReactComponent as YourSvg } from "../assets/svg/scheme_choose_arrow.svg";
-
+import { MenuItem } from "./MenuItem";
 export const schemeOptions = [
   {
     id: 1,
@@ -66,31 +65,17 @@ export const schemeOptions = [
     armrests: 8,
     img: "18_three_in_front_closed_row.jpg",
   },
-  {
-    id: 9,
-    title: "Выбрать наполнение вручную",
-    seats: 0,
-    foldingSeats: 0,
-    armrests: 0,
-    img: "none.jpg",
-  },
 ];
+
+const chooseManuallyOption = schemeOptions[schemeOptions.length - 1];
 export const SchemeChoose = ({ setScheme }) => {
-  return (
-    <div className="scheme_choose_wrapper">
-      <div className="scheme_choose_options_wrapper">
-        {schemeOptions.map((item) => {
-          return (
-            <div
-              className="scheme_choose_option"
-              onClick={() => setScheme(item)}
-            >
-              <div className="scheme_choose_option_title">{item.title}</div>
-              <YourSvg />
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
+  return schemeOptions.map((item) => {
+    return (
+      <MenuItem
+        key={item.id}
+        onClick={() => setScheme(item)}
+        title={item.title}
+      />
+    );
+  });
 };
