@@ -62,6 +62,10 @@ export const TotalWidget = ({
 
   return (
     <div className="total_wrapper">
+      Расчёт:
+      <div className="sum_text">{getTotal(totalData)} ₽</div>
+    </div>
+    /*     <div className="total_wrapper">
       <div className="total">
         <h3>РАСЧЁТ: </h3>
         <div className="total_body">
@@ -139,6 +143,6 @@ export const TotalWidget = ({
           </dialog>
         </div>
       </div>
-    </div>
+    </div> */
   );
 };

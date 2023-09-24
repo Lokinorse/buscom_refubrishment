@@ -13,9 +13,7 @@ import {
 export const Refubrishment = () => {
   const { steps } = useRefubrishmentQueries();
   const [scheme, setScheme] = useState(null);
-  console.log("scjee", scheme);
   const [totalData, setTotalData] = useState({});
-  console.log("totalData", totalData);
   const [urlConfig, setUrlConfig] = useState("");
   //const [queryParam, updateQueryParam] = useQueryParam("config", "");
 
@@ -49,6 +47,13 @@ export const Refubrishment = () => {
   return (
     <div className="wrapper">
       <h1>Переоборудование 2.0</h1>
+      {scheme && (
+        <TotalWidget
+          totalData={totalData}
+          scheme={scheme}
+          urlConfig={urlConfig}
+        />
+      )}
       {scheme && (
         <div
           style={{

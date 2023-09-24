@@ -9,9 +9,7 @@ import { ProductCard } from "./ProductCard";
 
 export const Step = ({ step, setTotalData, scheme, totalData }) => {
   const { name, products, sort_order } = step;
-  const [selectedOption, setSelectedOption] = useState(
-    find(products, { name: "Нет" })
-  );
+  const [selectedOption, setSelectedOption] = useState(null);
   const setSelectedOptionHandler = (val) => {
     const updatedSelectedOption = { ...val };
     if (step.name === "Установка сидений" && scheme.id != 9) {
@@ -71,7 +69,7 @@ export const Step = ({ step, setTotalData, scheme, totalData }) => {
 
   useEffect(() => {
     setTotalData((prev) => {
-      if (selectedOption.name === "Нет") {
+      if (selectedOption === null) {
         if (!prev[step.category_id]) return prev;
         const updatedPrev = { ...prev };
         delete updatedPrev[step.category_id];
@@ -91,13 +89,30 @@ export const Step = ({ step, setTotalData, scheme, totalData }) => {
       return { ...prev, [step.category_id]: totalProperties };
     });
   }, [selectedOption]);
-
+  console.log(1);
+  const subcategories = step?.subcategories || [];
+  console.log("subcategories", subcategories);
   return (
-    <MenuItem title={name}>
-      {products.map((product) => (
-        <ProductCard product={product} />
-      ))}
-      {/*       <div className="card_wrapper">
+    <div className="step_wrapper">
+      <MenuItem title={name}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+          {products.map((product) => (
+            <ProductCard product={product} />
+          ))}
+          {subcategories.map((subCat) => {
+            return (
+              <Step
+                step={subCat}
+                scheme={scheme}
+                key={subCat.category_id}
+                setTotalData={setTotalData}
+                totalData={totalData}
+              />
+            );
+          })}
+        </div>
+
+        {/*       <div className="card_wrapper">
         <h3 className="card_title">{`Шаг ${sort_order}. ${name}`}</h3>
         <div className="card_content_wrapper">
           <Options
@@ -116,6 +131,7 @@ export const Step = ({ step, setTotalData, scheme, totalData }) => {
           />
         </div>
       </div> */}
-    </MenuItem>
+      </MenuItem>
+    </div>
   );
 };

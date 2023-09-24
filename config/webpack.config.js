@@ -211,6 +211,8 @@ module.exports = function (webpackEnv) {
       filename: isEnvProduction
         ? "static/js/refubrishment.js"
         : isEnvDevelopment && "static/js/bundle.js",
+      assetModuleFilename:
+        "view/theme/default/stylesheet/fonts/[name][ext][query]",
     },
     cache: {
       type: "filesystem",
@@ -329,6 +331,12 @@ module.exports = function (webpackEnv) {
           test: /\.(js|mjs|jsx|ts|tsx|css)$/,
           loader: require.resolve("source-map-loader"),
         },
+        /*         isEnvDevelopment
+          ? false
+          : {
+              test: /\.(ttf|eot|woff|woff2)$/,
+              type: "asset",
+            }, */
         {
           // "oneOf" will traverse all following loaders until one will
           // match the requirements. When no loader matches it will fall
@@ -536,7 +544,12 @@ module.exports = function (webpackEnv) {
               // its runtime that would otherwise be processed through "file" loader.
               // Also exclude `html` and `json` extensions so they get processed
               // by webpacks internal loaders.
-              exclude: [/^$/, /\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
+              exclude: [
+                /^$/,
+                /\.(js|mjs|jsx|ttf|ts|tsx)$/,
+                /\.html$/,
+                /\.json$/,
+              ],
               type: "asset/resource",
             },
             // ** STOP ** Are you adding a new loader?
