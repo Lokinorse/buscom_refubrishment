@@ -1,4 +1,5 @@
 import axios from "axios";
+import type { TSteps } from "../types";
 
 export const queries = {
   getConstructorData: (setAllConstructorData) => {
@@ -14,7 +15,7 @@ export const queries = {
         setAllConstructorData(
           response.data.categories.sort((prev, curr) => {
             return prev.sort_order - curr.sort_order;
-          })
+          }) as TSteps
         );
       })
       .catch((error) => {

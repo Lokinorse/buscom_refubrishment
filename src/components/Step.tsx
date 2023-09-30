@@ -3,20 +3,22 @@ import { Options } from "./Options";
 import { SelectedOption } from "./SelectedOption";
 import { find } from "lodash";
 import { MenuItem } from "./MenuItem";
-import { ProductCard } from "./ProductCard";
+import { ProductCard } from "./ProductCard/ProductCard";
 
 //todo: remove react router dom
 
-export const Step = ({ step, setTotalData, scheme, totalData }) => {
+export const Step = ({
+  step,
+  setTotalData,
+  scheme,
+  totalData,
+  dispatch,
+  totalData2,
+}) => {
   const { name, products, sort_order } = step;
   const [selectedOption, setSelectedOption] = useState(null);
   const setSelectedOptionHandler = (val) => {
     const updatedSelectedOption = { ...val };
-    if (step.name === "Установка сидений" && scheme.id != 9) {
-      updatedSelectedOption.quantity = scheme.seats;
-      setSelectedOption(updatedSelectedOption);
-      return;
-    }
     setSelectedOption(updatedSelectedOption);
   };
 
@@ -36,7 +38,7 @@ export const Step = ({ step, setTotalData, scheme, totalData }) => {
   }, [step, totalData]);
 
   const setCountToTotalData = useCallback(
-    (val) => {
+    (val: any) => {
       setTotalData((prevState) => ({
         ...prevState,
         [step.category_id]: {
@@ -67,7 +69,7 @@ export const Step = ({ step, setTotalData, scheme, totalData }) => {
     [setTotalData, scheme]
   );
 
-  useEffect(() => {
+  /*   useEffect(() => {
     setTotalData((prev) => {
       if (selectedOption === null) {
         if (!prev[step.category_id]) return prev;
@@ -88,26 +90,33 @@ export const Step = ({ step, setTotalData, scheme, totalData }) => {
       };
       return { ...prev, [step.category_id]: totalProperties };
     });
-  }, [selectedOption]);
-  console.log(1);
+  }, [selectedOption]); */
+
   const subcategories = step?.subcategories || [];
-  console.log("subcategories", subcategories);
   return (
-    <div className="step_wrapper">
+    <div className="step_wrapper" key={name}>
       <MenuItem title={name}>
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           {products.map((product) => (
-            <ProductCard product={product} />
+            <ProductCard
+              totalData2={totalData2}
+              key={product.product_id}
+              product={product}
+              dispatch={dispatch}
+            />
           ))}
           {subcategories.map((subCat) => {
             return (
-              <Step
-                step={subCat}
-                scheme={scheme}
-                key={subCat.category_id}
-                setTotalData={setTotalData}
-                totalData={totalData}
-              />
+              <div key={subCat.category_id}>
+                <Step
+                  totalData2={totalData2}
+                  dispatch={dispatch}
+                  step={subCat}
+                  scheme={scheme}
+                  setTotalData={setTotalData}
+                  totalData={totalData}
+                />
+              </div>
             );
           })}
         </div>

@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Step } from "./components/Step";
-import { TotalWidget, SchemeChoose } from "./components";
-import { useRefubrishmentQueries } from "./services/useRefubrishmentServices";
+import { useImmerReducer } from "use-immer";
+import { Step } from "./Step";
+import { TotalWidget, SchemeChoose } from ".";
+import { useRefubrishmentQueries } from "../services/useRefubrishmentServices";
 import {
   concatSandTDStrings,
   getTotalDataQueryString,
   hydrateState,
-} from "./utils/helpers";
+} from "../utils/helpers";
+import type { ITotalData } from "../types";
+import {
+  totalDataReducer,
+  TTotalDataReducer,
+} from "../services/totalDataReducer";
 
 //TODO: Разрезолвить кейс, при котором ссылка копируется с изначально выставленным /?
 
@@ -14,6 +20,10 @@ export const Refubrishment = () => {
   const { steps } = useRefubrishmentQueries();
   const [scheme, setScheme] = useState(null);
   const [totalData, setTotalData] = useState({});
+  const [totalData2, dispatch] = useImmerReducer(totalDataReducer, {
+    products: [],
+  });
+  console.log("reducer", totalData2);
   const [urlConfig, setUrlConfig] = useState("");
   //const [queryParam, updateQueryParam] = useQueryParam("config", "");
 
@@ -46,6 +56,7 @@ export const Refubrishment = () => {
   };
   return (
     <div className="wrapper">
+      Ts go on.
       <h1>Переоборудование 2.0</h1>
       {scheme && (
         <TotalWidget
@@ -74,13 +85,17 @@ export const Refubrishment = () => {
         {scheme ? (
           steps.map((step) => {
             return (
-              <Step
-                step={step}
-                scheme={scheme}
-                key={step.category_id}
-                setTotalData={setTotalData}
-                totalData={totalData}
-              />
+              <div key={step.category_id}>
+                <Step
+                  totalData2={totalData2}
+                  dispatch={dispatch}
+                  step={step}
+                  scheme={scheme}
+                  key={step.category_id}
+                  setTotalData={setTotalData}
+                  totalData={totalData}
+                />
+              </div>
             );
           })
         ) : (

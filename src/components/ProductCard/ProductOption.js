@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { reduceNumberFromString } from "../utils/helpers";
+import { reduceNumberFromString } from "../../utils/helpers";
 // values which was already preseted in scheme
 const presetOptionsIds = { 62: "armrests", 125: "foldingSeats" };
 

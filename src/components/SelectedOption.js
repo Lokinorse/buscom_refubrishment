@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { CountInput } from "./CountInput";
-import { ProductOption } from "./ProductOption";
+import { CountInput } from "./ProductCard/CountInput";
+import { ProductOption } from "./ProductCard/ProductOption";
 
 const htmlDecode = (content) => {
   let e = document.createElement("div");

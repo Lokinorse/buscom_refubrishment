@@ -1,6 +1,5 @@
-import logo from "./logo.svg";
 import "./App.css";
-import { Refubrishment } from "./Refubrishment";
+import { Refubrishment } from "./components/Refubrishment";
 //todo:
 // все остальные опции в схехах - по кол-ву сидений
 // сменить схему  - добавить кнопку

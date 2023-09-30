@@ -306,6 +306,102 @@ dialog {
   font-weight: bold;
   flex-basis: 15%;
   text-align: right;
+  text-wrap: nowrap;
+}
+
+.product_wrapper .left_block {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.add_button {
+  border-radius: 37px;
+  background: #19b500;
+  color: white;
+  border: none;
+  height: 40px;
+  width: 120px;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+  overflow: hidden;
+  transition: color 0.4s;
+}
+
+.product_btn_text {
+  width: 200px;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 14px;
+}
+
+@keyframes changeColorToRed {
+  0% {
+    background: #19b500;
+  }
+  100% {
+    background: #b3175b;
+  }
+}
+
+@keyframes changeColorToDefault {
+  0% {
+    background: #b3175b;
+  }
+  100% {
+    background: #19b500;
+  }
+}
+
+@keyframes slideInText {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-57%);
+  }
+}
+
+@keyframes slideOutText {
+  0% {
+    transform: translateX(-57%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.product_btn_text.toggle_rmv {
+  animation: slideInText 0.7s ease forwards;
+}
+.product_btn_text.toggle_add {
+  animation: slideOutText 0.7s ease forwards;
+}
+
+.add_button.toggle_rmv {
+  animation: changeColorToRed 0.4s ease forwards;
+}
+.add_button.toggle_add {
+  animation: changeColorToDefault 0.4s ease forwards;
+}
+
+button.add_button[disabled] {
+  background-color: grey;
+}
+
+.add_button:hover:active {
+  background: #107000;
+}
+
+.add_button .prodct_btn_text {
+  display: flex;
+  width: 200px;
+  justify-content: space-between;
+}
+
+.add_button:hover {
+  background: #159701;
 }
 
 .product_wrapper .info {
