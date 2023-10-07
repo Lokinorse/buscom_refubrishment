@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { TotalDataContext } from "../Refubrishment";
+import { AdditionalOptions } from "./AdditionalOptions";
+import { IProductCardProps } from "./types";
 
 const htmlDecode = (content) => {
   let e = document.createElement("div");
@@ -6,7 +9,8 @@ const htmlDecode = (content) => {
   return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
 };
 
-export const ProductCard = ({ product, dispatch, totalData2 }) => {
+export const ProductCard = ({ product }: IProductCardProps) => {
+  const { totalData2, dispatch } = useContext(TotalDataContext);
   const [btnTouched, setBtnTouched] = useState(false);
   const addProduct = () => {
     dispatch({
@@ -35,6 +39,7 @@ export const ProductCard = ({ product, dispatch, totalData2 }) => {
     : "";
   return (
     <div>
+      {`ID: ${product.product_id}`}
       <div className="product_wrapper">
         {product.image && (
           <div className="img">
@@ -46,8 +51,13 @@ export const ProductCard = ({ product, dispatch, totalData2 }) => {
           <div
             className="description"
             dangerouslySetInnerHTML={{
-              __html: htmlDecode(product.description),
+              __html: htmlDecode(product.meta_description),
             }}
+          />
+          <AdditionalOptions
+            disabled={!isProductSelected}
+            options={product.options}
+            productId={product.product_id}
           />
         </div>
         <div className="left_block">

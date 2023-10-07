@@ -98,12 +98,7 @@ export const Step = ({
       <MenuItem title={name}>
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           {products.map((product) => (
-            <ProductCard
-              totalData2={totalData2}
-              key={product.product_id}
-              product={product}
-              dispatch={dispatch}
-            />
+            <ProductCard key={product.product_id} product={product} />
           ))}
           {subcategories.map((subCat) => {
             return (

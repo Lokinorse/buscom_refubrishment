@@ -406,6 +406,9 @@ button.add_button[disabled] {
 
 .product_wrapper .info {
   text-align: left;
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
 }
 
 .product_wrapper .info .title {
@@ -414,4 +417,31 @@ button.add_button[disabled] {
 
 .menu_item_child_wrapper {
   padding: 35px;
+}
+
+.additional_options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid #e8e2e2;
+  border-radius: 10px;
+}
+
+.additional_options.disabled {
+  background: #e2e1e1;
+  color: grey;
+}
+.disabled input[type="checkbox"] {
+  filter: invert(10%);
+}
+.checkbox {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.checkbox_label {
+  display: flex;
+  flex-direction: row;
 }

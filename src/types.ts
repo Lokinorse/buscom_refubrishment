@@ -1,4 +1,25 @@
+export interface IProductOptionValue {
+  image: string;
+  name: string;
+  option_value_id: string;
+  price: string;
+  price_prefix: string;
+  product_option_value_id: string;
+  quantity: string;
+  subtract: string;
+}
+
+export interface IProductOption {
+  name: string;
+  option_id: string;
+  product_option_id: string;
+  product_option_value: IProductOptionValue[];
+  required: string;
+  type: "radio";
+  value: string;
+}
 export interface IProduct {
+  options: IProductOption[];
   product_id: string;
   description: string;
   image: string;
@@ -53,7 +74,7 @@ export type TSteps = IStep[];
 export interface ITDProduct {
   product_id: string;
   count: number;
-  additional_options: {};
+  additional_options: any[];
 }
 export interface ITotalData {
   products: ITDProduct[];
