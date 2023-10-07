@@ -1,6 +1,7 @@
 import React from "react";
 
 import { IProductOption } from "../types";
+import { reduceNumberFromString } from "../utils/helpers";
 
 export const Checkbox = ({
   option,
@@ -22,13 +23,13 @@ export const Checkbox = ({
               <input
                 disabled={disabled}
                 type="checkbox"
-                value={JSON.stringify(item.name)}
+                value={item.name}
                 checked={checkedValue === item.name}
                 onChange={(event) => {
                   handleClick(event, item);
                 }}
               />
-              {`${item.name}`}
+              {`${item.name} (${reduceNumberFromString(item.price)} ₽)`}
             </label>
           </div>
         );

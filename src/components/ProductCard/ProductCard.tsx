@@ -2,11 +2,31 @@ import React, { useContext, useState } from "react";
 import { TotalDataContext } from "../Refubrishment";
 import { AdditionalOptions } from "./AdditionalOptions";
 import { IProductCardProps } from "./types";
+import { getNumberPriceFromProductPrice } from "../../utils/helpers";
 
 const htmlDecode = (content) => {
   let e = document.createElement("div");
   e.innerHTML = content;
   return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+};
+
+// Цена вместе с опциями
+const getFullPrice = (product, totalData2) => {
+  const productPrice = getNumberPriceFromProductPrice(product.price);
+  console.log("productPrice", productPrice);
+  const targetProduct = totalData2.products.find(
+    (p) => p.product_id === product.product_id
+  );
+  if (!targetProduct || !targetProduct?.additional_options?.length)
+    return productPrice;
+  const additionalOptionsPrice = targetProduct.additional_options.reduce(
+    (accumulator, currentProduct) => {
+      return accumulator + currentProduct.chosenOptionValue.price;
+    },
+    0
+  );
+  console.log("additionalOptionsPrice", additionalOptionsPrice);
+  return productPrice + additionalOptionsPrice;
 };
 
 export const ProductCard = ({ product }: IProductCardProps) => {
@@ -61,7 +81,10 @@ export const ProductCard = ({ product }: IProductCardProps) => {
           />
         </div>
         <div className="left_block">
-          <div className="price">{product.price}</div>
+          <div className="price">{`${getFullPrice(
+            product,
+            totalData2
+          )} ₽`}</div>
           <button
             className={`add_button ${btnAnimationClassName}`}
             onClick={isProductSelected ? removeProduct : addProduct}

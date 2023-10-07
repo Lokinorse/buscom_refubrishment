@@ -171,3 +171,10 @@ export const hydrateState = (params, setTotalData, setScheme, steps) => {
 };
 
 //http://localhost:3000/?conf_s=1__&89=so_co14so_pr_id249ao250_ao_co14ao251_ao_co9
+
+// e.g:  3 500 руб. ==> 3500
+export const getNumberPriceFromProductPrice = (stringPrice) => {
+  const numericString = stringPrice.replace(/[^0-9]/g, "");
+  const numericValue = parseInt(numericString, 10);
+  return numericValue;
+};

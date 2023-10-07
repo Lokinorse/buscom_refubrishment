@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { IProductOption, IProductOptionValue } from "../../types";
 import { Checkbox } from "../../ui-components/Checkbox";
 import { ITotalDataState, TotalDataContext } from "../Refubrishment";
+import { reduceNumberFromString } from "../../utils/helpers";
 
 // Функция, получающая значение чекбокса из totalData. В случае, если опция не выбрана - возвращает "Нет"
 const getCheckedValue = (
@@ -45,6 +46,7 @@ export const AdditionalOptionValue = ({
         chosenOptionValue: {
           name: chosenOptionValue.name,
           id: chosenOptionValue.option_value_id,
+          price: reduceNumberFromString(chosenOptionValue.price),
         },
       },
     });
