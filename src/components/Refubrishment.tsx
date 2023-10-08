@@ -25,6 +25,7 @@ export interface ITotalDataState {
 interface ContextType {
   totalData2: ITotalDataState;
   dispatch: Dispatch<IAction>;
+  scheme: any;
 }
 
 export const TotalDataContext = createContext<ContextType | undefined>(
@@ -72,16 +73,10 @@ export const Refubrishment = () => {
     setTotalData({});
   };
   return (
-    <TotalDataContext.Provider value={{ totalData2, dispatch }}>
+    <TotalDataContext.Provider value={{ totalData2, dispatch, scheme }}>
       <div className="wrapper">
         <h1>Переоборудование 2.0</h1>
-        {scheme && (
-          <TotalWidget
-            totalData={totalData}
-            scheme={scheme}
-            urlConfig={urlConfig}
-          />
-        )}
+        {scheme && <TotalWidget totalData={totalData} urlConfig={urlConfig} />}
         {scheme && (
           <div
             style={{
@@ -101,13 +96,12 @@ export const Refubrishment = () => {
         <div className="tiles_wrapper">
           {scheme ? (
             steps.map((step) => {
+              const isSeats = step.name === "Сиденья";
               return (
                 <div key={step.category_id}>
                   <Step
-                    totalData2={totalData2}
-                    dispatch={dispatch}
+                    isSeats={isSeats}
                     step={step}
-                    scheme={scheme}
                     key={step.category_id}
                     setTotalData={setTotalData}
                     totalData={totalData}

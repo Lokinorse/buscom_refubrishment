@@ -1,12 +1,24 @@
 import React from "react";
 import { MenuItem } from "./MenuItem";
+
+export const schemeRelatedOptionsMap = {
+  foldingSeats: "",
+  armrests: "",
+};
+
 export const schemeOptions = [
   {
     id: 1,
     title: "14 мест",
     seats: 14,
     foldingSeats: 11,
+    Опора: 14,
     armrests: 9,
+    backNet: 14,
+    backTable: 14,
+    material: 14,
+    headrest: 14,
+    Ремень: 14,
     img: "14.jpg",
   },
   {

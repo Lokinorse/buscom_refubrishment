@@ -35,8 +35,9 @@ export const AdditionalOptionValue = ({
   option: IProductOption;
   disabled?: boolean;
 }) => {
-  const { totalData2, dispatch } = useContext(TotalDataContext);
+  const { totalData2, dispatch, scheme } = useContext(TotalDataContext);
 
+  const schemeMultiplier = scheme[option.name] || 1;
   const handleCheckboxClick = (e, chosenOptionValue: IProductOptionValue) => {
     dispatch({
       type: "toggleAdditionalOptionCheckbox",
@@ -47,16 +48,20 @@ export const AdditionalOptionValue = ({
           name: chosenOptionValue.name,
           id: chosenOptionValue.option_value_id,
           price: reduceNumberFromString(chosenOptionValue.price),
+          count: schemeMultiplier,
         },
       },
     });
   };
 
+  console.log("option", option);
   const checkedValue = getCheckedValue(totalData2, productId, option);
+
   return (
     <div className="additional_option_value">
       {option.name}
       <Checkbox
+        schemeMultiplier={schemeMultiplier}
         disabled={disabled}
         checkedValue={checkedValue}
         option={option}

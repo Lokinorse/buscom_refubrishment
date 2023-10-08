@@ -1,20 +1,15 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Options } from "./Options";
 import { SelectedOption } from "./SelectedOption";
 import { find } from "lodash";
 import { MenuItem } from "./MenuItem";
 import { ProductCard } from "./ProductCard/ProductCard";
+import { TotalDataContext } from "./Refubrishment";
 
 //todo: remove react router dom
 
-export const Step = ({
-  step,
-  setTotalData,
-  scheme,
-  totalData,
-  dispatch,
-  totalData2,
-}) => {
+export const Step = ({ step, setTotalData, totalData, isSeats = false }) => {
+  const { scheme } = useContext(TotalDataContext);
   const { name, products, sort_order } = step;
   const [selectedOption, setSelectedOption] = useState(null);
   const setSelectedOptionHandler = (val) => {
@@ -98,16 +93,18 @@ export const Step = ({
       <MenuItem title={name}>
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           {products.map((product) => (
-            <ProductCard key={product.product_id} product={product} />
+            <ProductCard
+              key={product.product_id}
+              product={product}
+              isSeats={isSeats}
+            />
           ))}
           {subcategories.map((subCat) => {
             return (
               <div key={subCat.category_id}>
                 <Step
-                  totalData2={totalData2}
-                  dispatch={dispatch}
+                  isSeats={isSeats}
                   step={subCat}
-                  scheme={scheme}
                   setTotalData={setTotalData}
                   totalData={totalData}
                 />

@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { each } from "lodash";
+import React, { useState, useContext } from "react";
 import { reduceNumberFromString } from "../utils/helpers";
+import { TotalDataContext } from "./Refubrishment";
+import { getNumberPriceFromProductPrice } from "../utils/helpers";
 
 const getAdditionalOptionItemPrice = (option) => {
   if (!option.count) return;
@@ -19,7 +20,7 @@ const getItemPriceString = (item) => {
   }
 };
 
-const getTotal = (totalData) => {
+/* const getTotal = (totalData) => {
   let total = 0;
   each(totalData, (item) => {
     const additionalOptions = item.additional_options;
@@ -41,14 +42,26 @@ const getTotal = (totalData) => {
     }
   });
   return total;
+}; */
+
+const getTotalPrice = (totalData2) => {
+  let total = 0;
+  for (const product of totalData2.products) {
+    const productPrice = getNumberPriceFromProductPrice(product.price);
+    const productCount = product.count || 1;
+    total += productPrice * productCount;
+    if (product.additional_options) {
+      for (const option of product.additional_options) {
+        total +=
+          option.chosenOptionValue.count * option.chosenOptionValue.price;
+      }
+    }
+  }
+  return total;
 };
 
-export const TotalWidget = ({
-  totalData,
-  scheme,
-  resetSchemeHandler,
-  urlConfig,
-}) => {
+export const TotalWidget = ({ totalData, resetSchemeHandler, urlConfig }) => {
+  const { totalData2, dispatch, scheme } = useContext(TotalDataContext);
   const choosenSchemeText =
     scheme.id !== 9 ? `Выбранная схема: ${scheme.title}` : "";
   const [showDialog, setShowDialog] = useState(false);
@@ -63,7 +76,7 @@ export const TotalWidget = ({
   return (
     <div className="total_wrapper">
       Расчёт:
-      <div className="sum_text">{getTotal(totalData)} ₽</div>
+      <div className="sum_text">{getTotalPrice(totalData2)} ₽</div>
     </div>
     /*     <div className="total_wrapper">
       <div className="total">

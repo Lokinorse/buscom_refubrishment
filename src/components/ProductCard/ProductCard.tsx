@@ -12,30 +12,42 @@ const htmlDecode = (content) => {
 
 // Цена вместе с опциями
 const getFullPrice = (product, totalData2) => {
-  const productPrice = getNumberPriceFromProductPrice(product.price);
-  console.log("productPrice", productPrice);
+  const productSingleItemPrice = getNumberPriceFromProductPrice(product.price);
   const targetProduct = totalData2.products.find(
     (p) => p.product_id === product.product_id
   );
-  if (!targetProduct || !targetProduct?.additional_options?.length)
-    return productPrice;
-  const additionalOptionsPrice = targetProduct.additional_options.reduce(
-    (accumulator, currentProduct) => {
+  if (!targetProduct)
+    return {
+      price: productSingleItemPrice,
+      singleItemPrice: productSingleItemPrice,
+      count: 1,
+    };
+  const productSchemedPrice = targetProduct.count
+    ? productSingleItemPrice * targetProduct.count
+    : productSingleItemPrice;
+
+  const additionalOptionsPrice =
+    targetProduct?.additional_options?.reduce((accumulator, currentProduct) => {
       return accumulator + currentProduct.chosenOptionValue.price;
-    },
-    0
-  );
-  console.log("additionalOptionsPrice", additionalOptionsPrice);
-  return productPrice + additionalOptionsPrice;
+    }, 0) || 0;
+  return {
+    singleItemPrice: productSingleItemPrice,
+    price: productSchemedPrice + additionalOptionsPrice,
+    count: targetProduct.count || 1,
+  };
 };
 
-export const ProductCard = ({ product }: IProductCardProps) => {
-  const { totalData2, dispatch } = useContext(TotalDataContext);
+export const ProductCard = ({ product, isSeats }: IProductCardProps) => {
+  const { totalData2, dispatch, scheme } = useContext(TotalDataContext);
   const [btnTouched, setBtnTouched] = useState(false);
+  // кастомное количество сидений, в случае, если выбрана тема
+  const productPayload = isSeats
+    ? { ...product, count: scheme.seats }
+    : product;
   const addProduct = () => {
     dispatch({
       type: "addProduct",
-      payload: product,
+      payload: productPayload,
     });
     setBtnTouched(true);
   };
@@ -57,9 +69,10 @@ export const ProductCard = ({ product }: IProductCardProps) => {
       ? "toggle_rmv"
       : "toggle_add"
     : "";
+
+  const { price, singleItemPrice, count } = getFullPrice(product, totalData2);
   return (
     <div>
-      {`ID: ${product.product_id}`}
       <div className="product_wrapper">
         {product.image && (
           <div className="img">
@@ -81,10 +94,9 @@ export const ProductCard = ({ product }: IProductCardProps) => {
           />
         </div>
         <div className="left_block">
-          <div className="price">{`${getFullPrice(
-            product,
-            totalData2
-          )} ₽`}</div>
+          <div className="price">{`${price} ₽ ${
+            count > 1 ? `(x${count})` : ""
+          }`}</div>
           <button
             className={`add_button ${btnAnimationClassName}`}
             onClick={isProductSelected ? removeProduct : addProduct}

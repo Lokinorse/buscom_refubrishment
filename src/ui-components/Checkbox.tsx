@@ -4,11 +4,13 @@ import { IProductOption } from "../types";
 import { reduceNumberFromString } from "../utils/helpers";
 
 export const Checkbox = ({
+  schemeMultiplier = 1,
   option,
   handleClick,
   checkedValue,
   disabled = false,
 }: {
+  schemeMultiplier?: number;
   option: IProductOption;
   handleClick: (...arg: any) => void;
   checkedValue: string;
@@ -29,7 +31,15 @@ export const Checkbox = ({
                   handleClick(event, item);
                 }}
               />
-              {`${item.name} (${reduceNumberFromString(item.price)} ₽)`}
+              {`${item.name} ${
+                reduceNumberFromString(item.price) * schemeMultiplier
+              }₽ ${
+                item.name !== "Нет"
+                  ? `(${schemeMultiplier}x${reduceNumberFromString(
+                      item.price
+                    )} ₽)`
+                  : ""
+              }`}
             </label>
           </div>
         );

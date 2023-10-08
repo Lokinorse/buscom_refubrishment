@@ -16,6 +16,7 @@ export const AdditionalOptions = ({
   productId: string;
   options: IProductOption[];
 }) => {
+  if (!options.length) return null;
   return (
     <div className={`additional_options ${disabled ? "disabled" : ""}`}>
       {options.map((o) => {

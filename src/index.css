@@ -69,6 +69,7 @@ code {
   gap: 20px;
   flex-direction: column;
   max-width: 1000px;
+  margin: 0, auto;
 }
 
 .card_wrapper {
