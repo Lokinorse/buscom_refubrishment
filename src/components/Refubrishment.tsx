@@ -15,10 +15,12 @@ import { IAction, totalDataReducer } from "../services/totalDataReducer";
 
 const reducerInitialState = {
   products: [],
+  tempState: null,
 };
 
 export interface ITotalDataState {
   products: any[];
+  tempState?: any;
   [key: string]: any | undefined;
 }
 

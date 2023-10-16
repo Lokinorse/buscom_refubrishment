@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { IProductOption, IProductOptionValue } from "../../types";
+import React, { useContext, useState } from "react";
+import { IProductOption, IProductOptionValue, ITotalData } from "../../types";
 import { Checkbox } from "../../ui-components/Checkbox";
 import { ITotalDataState, TotalDataContext } from "../Refubrishment";
 import { reduceNumberFromString } from "../../utils/helpers";
@@ -30,32 +30,35 @@ export const AdditionalOptionValue = ({
   option,
   productId,
   disabled = false,
+  cachedState,
 }: {
+  cachedState: ITotalData;
   productId: string;
   option: IProductOption;
   disabled?: boolean;
 }) => {
-  const { totalData2, dispatch, scheme } = useContext(TotalDataContext);
+  const [dispatlocalState, setLocalState] = useState(cachedState);
+  const { scheme, dispatch } = useContext(TotalDataContext);
 
   const schemeMultiplier = scheme[option.name] || 1;
-  const handleCheckboxClick = (e, chosenOptionValue: IProductOptionValue) => {
+  const handleCheckboxClick = (chosenOptionValue: IProductOptionValue) => {
+    const payload = {
+      productId,
+      chosenOption: { name: option.name, id: option.option_id },
+      chosenOptionValue: {
+        name: chosenOptionValue.name,
+        id: chosenOptionValue.option_value_id,
+        price: reduceNumberFromString(chosenOptionValue.price),
+        count: schemeMultiplier,
+      },
+    };
     dispatch({
       type: "toggleAdditionalOptionCheckbox",
-      payload: {
-        productId,
-        chosenOption: { name: option.name, id: option.option_id },
-        chosenOptionValue: {
-          name: chosenOptionValue.name,
-          id: chosenOptionValue.option_value_id,
-          price: reduceNumberFromString(chosenOptionValue.price),
-          count: schemeMultiplier,
-        },
-      },
+      payload: { ...payload, shouldFreeze: true },
     });
   };
 
-  console.log("option", option);
-  const checkedValue = getCheckedValue(totalData2, productId, option);
+  const checkedValue = getCheckedValue(cachedState, productId, option);
 
   return (
     <div className="additional_option_value">

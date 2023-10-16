@@ -69,7 +69,7 @@ code {
   gap: 20px;
   flex-direction: column;
   max-width: 1000px;
-  margin: 0, auto;
+  margin: 0 auto;
 }
 
 .card_wrapper {
@@ -316,6 +316,24 @@ dialog {
   justify-content: space-between;
 }
 
+.extra_options_button {
+  opacity: 0;
+  transition: all 0.4s;
+  border-radius: 37px;
+  background: #19b500;
+  color: white;
+  border: none;
+  height: 40px;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: auto;
+}
+
+.extra_options_button.show {
+  opacity: 1;
+}
+
 .add_button {
   border-radius: 37px;
   background: #19b500;
@@ -425,8 +443,6 @@ button.add_button[disabled] {
   flex-direction: column;
   gap: 10px;
   padding: 10px;
-  border: 1px solid #e8e2e2;
-  border-radius: 10px;
 }
 
 .additional_options.disabled {
@@ -445,4 +461,40 @@ button.add_button[disabled] {
 .checkbox_label {
   display: flex;
   flex-direction: row;
+}
+
+.modal_window_wrapper {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal_content {
+  position: relative;
+  background: white;
+  border: 1px solid #e8e2e2;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 15px;
+}
+
+.modal_title {
+  text-align: center;
+  font-size: 20px;
+}
+
+.close_button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  cursor: pointer;
 }

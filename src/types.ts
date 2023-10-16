@@ -1,3 +1,5 @@
+import { TActionId } from "./services/totalDataReducer";
+
 export interface IProductOptionValue {
   image: string;
   name: string;
@@ -78,4 +80,5 @@ export interface ITDProduct {
 }
 export interface ITotalData {
   products: ITDProduct[];
+  tempState?: any;
 }

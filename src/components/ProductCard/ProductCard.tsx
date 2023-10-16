@@ -3,6 +3,7 @@ import { TotalDataContext } from "../Refubrishment";
 import { AdditionalOptions } from "./AdditionalOptions";
 import { IProductCardProps } from "./types";
 import { getNumberPriceFromProductPrice } from "../../utils/helpers";
+import { ModalWindow } from "../../ui-components/ModalWindow";
 
 const htmlDecode = (content) => {
   let e = document.createElement("div");
@@ -38,6 +39,7 @@ const getFullPrice = (product, totalData2) => {
 };
 
 export const ProductCard = ({ product, isSeats }: IProductCardProps) => {
+  const [showOptions, setShowOptions] = useState(false);
   const { totalData2, dispatch, scheme } = useContext(TotalDataContext);
   const [btnTouched, setBtnTouched] = useState(false);
   // кастомное количество сидений, в случае, если выбрана тема
@@ -70,6 +72,16 @@ export const ProductCard = ({ product, isSeats }: IProductCardProps) => {
       : "toggle_add"
     : "";
 
+  const cancelHandler = () => {
+    setShowOptions(false);
+    dispatch({ type: "restoreFrozenState", payload: null });
+  };
+
+  const confirmHandler = () => {
+    setShowOptions(false);
+    dispatch({ type: "forgetFrozenState", payload: null });
+  };
+
   const { price, singleItemPrice, count } = getFullPrice(product, totalData2);
   return (
     <div>
@@ -87,11 +99,26 @@ export const ProductCard = ({ product, isSeats }: IProductCardProps) => {
               __html: htmlDecode(product.meta_description),
             }}
           />
-          <AdditionalOptions
-            disabled={!isProductSelected}
-            options={product.options}
-            productId={product.product_id}
-          />
+          {!!product.options?.length && (
+            <button
+              className={`extra_options_button ${
+                isProductSelected ? "show" : ""
+              }`}
+              onClick={() => setShowOptions(!showOptions)}
+            >
+              Дополнительные опции
+            </button>
+          )}
+
+          {showOptions && (
+            <ModalWindow title={product.name} onClose={cancelHandler}>
+              <AdditionalOptions
+                confirmHandler={confirmHandler}
+                options={product.options}
+                productId={product.product_id}
+              />
+            </ModalWindow>
+          )}
         </div>
         <div className="left_block">
           <div className="price">{`${price} ₽ ${

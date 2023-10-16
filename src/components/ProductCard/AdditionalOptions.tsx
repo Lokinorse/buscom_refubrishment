@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import { IProductOption } from "../../types";
+import { TotalDataContext } from "../Refubrishment";
 import { AdditionalOptionValue } from "./AdditionalOptionValue";
 
 /**
@@ -8,20 +9,24 @@ import { AdditionalOptionValue } from "./AdditionalOptionValue";
  */
 
 export const AdditionalOptions = ({
+  confirmHandler,
   disabled,
   options,
   productId,
 }: {
-  disabled: boolean;
+  confirmHandler?: () => void;
+  disabled?: boolean;
   productId: string;
   options: IProductOption[];
 }) => {
+  const { totalData2 } = useContext(TotalDataContext);
   if (!options.length) return null;
   return (
     <div className={`additional_options ${disabled ? "disabled" : ""}`}>
       {options.map((o) => {
         return (
           <AdditionalOptionValue
+            cachedState={totalData2}
             disabled={disabled}
             key={o.option_id}
             productId={productId}
@@ -29,6 +34,7 @@ export const AdditionalOptions = ({
           />
         );
       })}
+      {confirmHandler && <button onClick={confirmHandler}>Продолжить</button>}
     </div>
   );
 };

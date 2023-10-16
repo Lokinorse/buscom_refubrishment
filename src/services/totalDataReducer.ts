@@ -1,8 +1,11 @@
 import { ITotalData } from "../types";
 import { current } from "immer";
+import { cloneDeep } from "lodash";
 export type TActionId =
   | "addProduct"
   | "removeProduct"
+  | "restoreFrozenState"
+  | "forgetFrozenState"
   | "toggleAdditionalOptionCheckbox";
 export interface IAction {
   type: TActionId;
@@ -23,9 +26,22 @@ export const totalDataReducer: TTotalDataReducer = (draft, action) => {
       break;
     }
 
+    case "forgetFrozenState": {
+      draft.tempState = null;
+    }
+
+    case "restoreFrozenState": {
+      if (draft.tempState) return { ...draft.tempState, tempState: null };
+      return draft;
+    }
     case "toggleAdditionalOptionCheckbox": {
-      const { productId, chosenOption, chosenOptionValue } = action.payload;
-      console.log("action payload", action.payload);
+      const { productId, chosenOption, chosenOptionValue, shouldFreeze } =
+        action.payload;
+      if (shouldFreeze && !draft.tempState) {
+        const draftClone = cloneDeep(draft);
+        const { tempState, ...newTempState } = draftClone;
+        draft.tempState = { ...newTempState };
+      }
       const targetProduct = draft.products.find(
         (product) => product.product_id === productId
       );
