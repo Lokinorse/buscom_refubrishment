@@ -6,6 +6,7 @@ export type TActionId =
   | "removeProduct"
   | "restoreFrozenState"
   | "forgetFrozenState"
+  | "rewriteWholeState"
   | "toggleAdditionalOptionCheckbox";
 export interface IAction {
   type: TActionId;
@@ -14,9 +15,17 @@ export interface IAction {
 export type TTotalDataReducer = (drft: ITotalData, actn: IAction) => void;
 
 export const totalDataReducer: TTotalDataReducer = (draft, action) => {
+  //console.log("action", action);
   switch (action.type) {
+    case "rewriteWholeState": {
+      return action.payload;
+    }
     case "addProduct": {
-      draft.products.push(action.payload);
+      console.log(current(draft.products));
+      const idExists = draft.products.some(
+        (item) => item.product_id === action.payload.product_id
+      );
+      if (!idExists) draft.products.push(action.payload);
       break;
     }
     case "removeProduct": {
@@ -28,6 +37,7 @@ export const totalDataReducer: TTotalDataReducer = (draft, action) => {
 
     case "forgetFrozenState": {
       draft.tempState = null;
+      break;
     }
 
     case "restoreFrozenState": {

@@ -464,17 +464,25 @@ button.add_button[disabled] {
 }
 
 .modal_window_wrapper {
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
   position: fixed;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100vw;
-  height: 100vh;
   top: 0;
   left: 0;
   z-index: 1000;
   background-color: rgba(0, 0, 0, 0.5);
+  /*   opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s; */
 }
+/* .modal_window_wrapper.show {
+  opacity: 1;
+  visibility: visible;
+} */
 
 .modal_content {
   position: relative;
@@ -494,7 +502,7 @@ button.add_button[disabled] {
 
 .close_button {
   position: absolute;
-  top: 15px;
-  right: 15px;
+  top: 5px;
+  right: 5px;
   cursor: pointer;
 }

@@ -1,9 +1,11 @@
-const a = {
-  b: 4,
-  c: () => {
-    self = this;
-    console.log("priv", this.b);
-  },
-};
+console.log(1);
 
-a.c();
+const a = new Promise((resolve, reject) => resolve(console.log(2)));
+
+a.then((res) => console.log(3));
+
+setTimeout(() => {
+  console.log(4);
+}, 0);
+
+console.log(5);

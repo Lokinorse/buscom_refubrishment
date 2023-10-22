@@ -34,7 +34,7 @@ export const AdditionalOptions = ({
           />
         );
       })}
-      {confirmHandler && <button onClick={confirmHandler}>Продолжить</button>}
+      {confirmHandler && <button onClick={confirmHandler}>Применить</button>}
     </div>
   );
 };

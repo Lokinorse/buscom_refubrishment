@@ -3,11 +3,7 @@ import { useImmerReducer } from "use-immer";
 import { Step } from "./Step";
 import { TotalWidget, SchemeChoose } from ".";
 import { useRefubrishmentQueries } from "../services/useRefubrishmentServices";
-import {
-  concatSandTDStrings,
-  getTotalDataQueryString,
-  hydrateState,
-} from "../utils/helpers";
+import { hydrateState, generateUrlLink } from "../utils/helpers";
 import type { ITotalData } from "../types";
 import { IAction, totalDataReducer } from "../services/totalDataReducer";
 
@@ -36,24 +32,36 @@ export const TotalDataContext = createContext<ContextType | undefined>(
 
 export const Refubrishment = () => {
   const { steps } = useRefubrishmentQueries();
+  const [openedMenus, setOpenedMenus] = useState([]);
   const [scheme, setScheme] = useState(null);
   const [totalData, setTotalData] = useState({});
   const [totalData2, dispatch] = useImmerReducer(
     totalDataReducer,
     reducerInitialState
   );
-  window["state"] = totalData2;
-  //console.log("reducer", totalData2);
   const [urlConfig, setUrlConfig] = useState("");
   //const [queryParam, updateQueryParam] = useQueryParam("config", "");
+  window["state"] = totalData2;
+  window["config"] = urlConfig;
 
   useEffect(() => {
     const urlSearchParams = new URLSearchParams(window.location.search);
-    const params = Object.fromEntries(urlSearchParams.entries());
-    hydrateState(params, setTotalData, setScheme, steps);
+    const params = {};
+
+    urlSearchParams.forEach((value, key) => {
+      if (params[key] === undefined) {
+        params[key] = value;
+      } else {
+        if (!Array.isArray(params[key])) {
+          params[key] = [params[key]];
+        }
+        params[key].push(value);
+      }
+    });
+    hydrateState({ params, dispatch, steps, setOpenedMenus });
   }, [steps]);
 
-  useEffect(() => {
+  /*   useEffect(() => {
     if (!scheme) {
       setUrlConfig("");
       return;
@@ -64,7 +72,7 @@ export const Refubrishment = () => {
     setUrlConfig(
       concatSandTDStrings(urlConfig, getTotalDataQueryString(totalData))
     );
-  }, [totalData]);
+  }, [totalData]); */
 
   const setSchemeHandler = (chosenScheme) => {
     setScheme(chosenScheme);
@@ -77,7 +85,7 @@ export const Refubrishment = () => {
   return (
     <TotalDataContext.Provider value={{ totalData2, dispatch, scheme }}>
       <div className="wrapper">
-        <h1>Переоборудование 2.0</h1>
+        <h1>Переоборудование</h1>
         {scheme && <TotalWidget totalData={totalData} urlConfig={urlConfig} />}
         {scheme && (
           <div
@@ -92,7 +100,9 @@ export const Refubrishment = () => {
               <div>&nbsp;</div>
               <div style={{ fontWeight: "bold" }}>{scheme.title}</div>
             </div>
-            <button>privet</button>
+            <button onClick={() => generateUrlLink(totalData2)}>
+              Скопировать ссылку на кофигурацию
+            </button>
           </div>
         )}
         <div className="tiles_wrapper">
@@ -101,7 +111,10 @@ export const Refubrishment = () => {
               const isSeats = step.name === "Сиденья";
               return (
                 <div key={step.category_id}>
+                  {`ID: ${step.category_id}`}
                   <Step
+                    openedMenus={openedMenus}
+                    forceOpen={openedMenus.includes(step.category_id)}
                     isSeats={isSeats}
                     step={step}
                     key={step.category_id}

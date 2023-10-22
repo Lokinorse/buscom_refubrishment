@@ -4,6 +4,7 @@ import { AdditionalOptions } from "./AdditionalOptions";
 import { IProductCardProps } from "./types";
 import { getNumberPriceFromProductPrice } from "../../utils/helpers";
 import { ModalWindow } from "../../ui-components/ModalWindow";
+import { ImageModal } from "../../ui-components/Image";
 
 const htmlDecode = (content) => {
   let e = document.createElement("div");
@@ -86,11 +87,7 @@ export const ProductCard = ({ product, isSeats }: IProductCardProps) => {
   return (
     <div>
       <div className="product_wrapper">
-        {product.image && (
-          <div className="img">
-            <img src={`https://bus-com.ru/image/${product.image}`}></img>
-          </div>
-        )}
+        {product.image && <ImageModal image={product.image} />}
         <div className="info">
           <div className="title">{product.name}</div>
           <div
@@ -109,7 +106,6 @@ export const ProductCard = ({ product, isSeats }: IProductCardProps) => {
               Дополнительные опции
             </button>
           )}
-
           {showOptions && (
             <ModalWindow title={product.name} onClose={cancelHandler}>
               <AdditionalOptions
@@ -129,7 +125,8 @@ export const ProductCard = ({ product, isSeats }: IProductCardProps) => {
             onClick={isProductSelected ? removeProduct : addProduct}
           >
             <div className={`product_btn_text ${btnAnimationClassName}`}>
-              <span>Добавить</span> <span>Удалить</span>
+              <span>{isProductSelected ? "Удалить" : "Добавить"}</span>
+              {/* <span>Добавить</span> <span>Удалить</span> */}
             </div>
           </button>
         </div>

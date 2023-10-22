@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ReactComponent as ArrowSvg } from "../assets/svg/scheme_choose_arrow.svg";
 
-export const MenuItem = ({ onClick, title, children }) => {
-  const [isOpen, setIsOpen] = useState(false);
+export const MenuItem = ({ onClick, title, forceOpen = false, children }) => {
+  const [isOpen, setIsOpen] = useState(forceOpen);
+  useEffect(() => {
+    setIsOpen(forceOpen);
+  }, [forceOpen]);
   const toggleOpen = () => setIsOpen(!isOpen);
   const arrowClass = isOpen ? "rotate_arrow" : "";
   return (

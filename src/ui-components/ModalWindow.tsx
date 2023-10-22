@@ -1,10 +1,25 @@
-import React from "react";
+import React, { ReactNode } from "react";
 
-export const ModalWindow = ({ children, onClose, title }) => {
+interface IModalWindowProps {
+  children?: ReactNode;
+  onClose: () => void;
+  title?: string;
+}
+
+export const ModalWindow = ({
+  children,
+  onClose,
+  title,
+}: IModalWindowProps) => {
   return (
-    <div className="modal_window_wrapper">
+    <div className={`modal_window_wrapper`}>
       <div className="modal_content">
-        <div className="close_button" onClick={onClose}>
+        <div
+          className="close_button"
+          onClick={() => {
+            onClose();
+          }}
+        >
           <div
             style={{
               width: "15px",

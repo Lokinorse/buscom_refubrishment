@@ -8,7 +8,14 @@ import { TotalDataContext } from "./Refubrishment";
 
 //todo: remove react router dom
 
-export const Step = ({ step, setTotalData, totalData, isSeats = false }) => {
+export const Step = ({
+  step,
+  setTotalData,
+  totalData,
+  openedMenus,
+  isSeats = false,
+  forceOpen = false,
+}) => {
   const { scheme } = useContext(TotalDataContext);
   const { name, products, sort_order } = step;
   const [selectedOption, setSelectedOption] = useState(null);
@@ -90,7 +97,7 @@ export const Step = ({ step, setTotalData, totalData, isSeats = false }) => {
   const subcategories = step?.subcategories || [];
   return (
     <div className="step_wrapper" key={name}>
-      <MenuItem title={name}>
+      <MenuItem title={name} forceOpen={forceOpen}>
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           {products.map((product) => (
             <ProductCard
@@ -102,7 +109,10 @@ export const Step = ({ step, setTotalData, totalData, isSeats = false }) => {
           {subcategories.map((subCat) => {
             return (
               <div key={subCat.category_id}>
+                {`ID: ${subCat.category_id}`}
                 <Step
+                  openedMenus={openedMenus}
+                  forceOpen={openedMenus.includes(subCat.category_id)}
                   isSeats={isSeats}
                   step={subCat}
                   setTotalData={setTotalData}

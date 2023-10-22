@@ -116,6 +116,30 @@ export const getTotalDataQueryString = (totalData) => {
   return tdString;
 };
 
+export const generateUrlLink = (totalData2) => {
+  let configString = "";
+  let index = 0;
+  for (const product of totalData2.products) {
+    const urlPrefix = index === 0 ? "?" : "&";
+    configString += `${urlPrefix}pr_id=${product.product_id}`;
+    if (product?.additional_options?.length) {
+      for (const option of product?.additional_options) {
+        configString += `ad_opt=${option.id}__ch_val=${option.chosenOptionValue.id}`;
+      }
+    }
+    index++;
+  }
+  const domainName =
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:3000/"
+      : "https://bus-com.ru/";
+  navigator.clipboard
+    .writeText(domainName + configString)
+    .then(() => alert("Ссылка скопирована!"));
+  //console.log("totalData2", totalData2);
+  //console.log("string", configString);
+};
+
 export const clearQueryParams = () => {
   const url = new URL(window.location.href);
   url.search = "";
@@ -135,8 +159,84 @@ const convertArrayToObject = (array) => {
   }, {});
 };
 
-export const hydrateState = (params, setTotalData, setScheme, steps) => {
-  const schemeId = params.conf_s?.substr(0, 1);
+function findStepInDeepArray(arr, productId, dispatch, openedCats = []) {
+  if (!productId) return { product: null, openedCategories: [] };
+  let openedCategories = [];
+  let foundProduct = null;
+
+  for (const item of arr) {
+    let possiblyOpenedCats = [...openedCats, item.category_id];
+
+    if (item?.products?.length) {
+      for (const product of item.products) {
+        if (product.product_id == productId) {
+          foundProduct = product;
+          openedCategories = [...openedCategories, ...possiblyOpenedCats];
+          return { product: foundProduct, openedCategories };
+        }
+      }
+    }
+
+    if (item.subcategories) {
+      const result = findStepInDeepArray(
+        item.subcategories,
+        productId,
+        dispatch,
+        possiblyOpenedCats
+      );
+
+      if (result.product) {
+        foundProduct = result.product;
+        return {
+          product: foundProduct,
+          openedCategories: [...openedCategories, ...result.openedCategories],
+        };
+      }
+    }
+  }
+
+  return { product: foundProduct, openedCategories };
+}
+
+const getProductIdFromUrlString = (str) => {
+  const match = str.match(/(\d+)/);
+  if (match) return parseInt(match[0], 10);
+};
+
+export const hydrateState = ({ params, dispatch, steps, setOpenedMenus }) => {
+  if (!Object.keys(params).length) return;
+  let chosenSteps;
+  if (Array.isArray(params.pr_id)) {
+    chosenSteps = map(params.pr_id, (value, key) => {
+      const id = getProductIdFromUrlString(value);
+      return findStepInDeepArray(steps, id, dispatch);
+    }).filter((i) => i.product);
+  } else {
+    const id = getProductIdFromUrlString(params.pr_id);
+    chosenSteps = [findStepInDeepArray(steps, id, dispatch)].filter((i) => i);
+  }
+  console.log("chosenSteps", chosenSteps);
+  for (const chosenStep of chosenSteps) {
+    if (chosenStep.product) {
+      dispatch({
+        type: "addProduct",
+        payload: chosenStep.product,
+      });
+    }
+  }
+  const openedMenus = chosenSteps.reduce((acc, curr) => {
+    return [...acc, ...curr.openedCategories];
+  }, []);
+  setOpenedMenus(openedMenus);
+  //pr_id=507pr_id=252ad_opt=16__ch_val=53ad_opt=17__ch_val=59
+  //const restoredProducts = getRestoredProducts(params)
+  //dispatch({
+  //  type: "addProduct",
+  //  payload: productPayload,
+  //});
+};
+
+/*   const schemeId = params.conf_s?.substr(0, 1);
   if (schemeId) {
     const scheme = find(schemeOptions, { id: Number(schemeId) });
     if (scheme) setScheme(scheme);
@@ -167,8 +267,8 @@ export const hydrateState = (params, setTotalData, setScheme, steps) => {
     return stepAugmented;
   });
   const hydratedTotalData = convertArrayToObject(stepsToTotalData);
-  setTotalData(hydratedTotalData);
-};
+  setTotalData(hydratedTotalData); 
+};*/
 
 //http://localhost:3000/?conf_s=1__&89=so_co14so_pr_id249ao250_ao_co14ao251_ao_co9
 
