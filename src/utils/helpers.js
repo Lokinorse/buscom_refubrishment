@@ -1,4 +1,4 @@
-import { each, find, map } from "lodash";
+import { each, find, map, cloneDeep } from "lodash";
 import { schemeOptions, getOptionSystemName } from "../components/SchemeChoose";
 export const reduceNumberFromString = (price) => {
   if (typeof price === "number") return price;
@@ -141,7 +141,6 @@ export const getTotalDataQueryString = (totalData) => {
 
 export const generateUrlLink = (totalData2, scheme) => {
   let configString = `?scheme_id=${scheme.id}`;
-  let index = 0;
   for (const product of totalData2.products) {
     configString += `&pr_id=${product.product_id}`;
     if (product?.additional_options?.length) {
@@ -149,7 +148,6 @@ export const generateUrlLink = (totalData2, scheme) => {
         configString += `ad_opt=${option.id}__ch_val=${option.chosenOptionValue.id}`;
       }
     }
-    index++;
   }
   const domainName =
     process.env.NODE_ENV === "development"
@@ -185,7 +183,10 @@ function findStepInDeepArray(arr, productId, dispatch, openedCats = []) {
   let foundProduct = null;
 
   for (const item of arr) {
-    let possiblyOpenedCats = [...openedCats, item.category_id];
+    let possiblyOpenedCats = [
+      ...openedCats,
+      { id: item.category_id, column: item.column },
+    ];
 
     if (item?.products?.length) {
       for (const product of item.products) {
@@ -272,22 +273,29 @@ export const hydrateState = ({
   }
   chosenSteps = map(params.pr_id, (value, key) => {
     const { id, options } = getIdAndOptions(value, steps, scheme);
-    const step = findStepInDeepArray(steps, id, dispatch);
+    const foundStep = findStepInDeepArray(steps, id, dispatch);
+    const step = cloneDeep(foundStep);
     if (!step.product) return;
     step.product["additional_options"] = options;
     return step;
   }).filter((i) => i);
-  console.log("steps", chosenSteps);
+
   for (const chosenStep of chosenSteps) {
+    const parentCat =
+      chosenStep.openedCategories[chosenStep.openedCategories.length - 1];
     if (chosenStep.product) {
       dispatch({
         type: "addProduct",
-        payload: chosenStep.product,
+        payload: {
+          ...chosenStep.product,
+          isUniqueForCategory: parentCat.column === "666",
+          parentCat: parentCat.id,
+        },
       });
     }
   }
   const openedMenus = chosenSteps.reduce((acc, curr) => {
-    return [...acc, ...curr.openedCategories];
+    return [...acc, ...curr.openedCategories.map((o) => o.id)];
   }, []);
   setOpenedMenus(openedMenus);
   //pr_id=507pr_id=252ad_opt=16__ch_val=53ad_opt=17__ch_val=59

@@ -63,6 +63,9 @@ export const Step = ({
   }, [selectedOption]); */
 
   const subcategories = step?.subcategories || [];
+  if (step.name === "Новые сиденья") {
+    console.log("step", step);
+  }
   return (
     <div className="step_wrapper" key={name}>
       <MenuItem title={name} forceOpen={forceOpen}>

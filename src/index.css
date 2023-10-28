@@ -409,7 +409,7 @@ dialog {
 .product_btn_text.toggle_rmv {
   animation: slideInText 0.7s ease forwards;
 }
-.product_btn_text.toggle_rmv {
+.product_btn_text.toggle_add {
   animation: slideOutText 0.7s ease forwards;
 }
 
