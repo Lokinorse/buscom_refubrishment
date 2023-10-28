@@ -3,6 +3,7 @@ import { IProductOption, IProductOptionValue, ITotalData } from "../../types";
 import { Checkbox } from "../../ui-components/Checkbox";
 import { ITotalDataState, TotalDataContext } from "../Refubrishment";
 import { reduceNumberFromString } from "../../utils/helpers";
+import { getOptionSystemName } from "../../components/SchemeChoose.js";
 
 // Функция, получающая значение чекбокса из totalData. В случае, если опция не выбрана - возвращает "Нет"
 const getCheckedValue = (
@@ -40,7 +41,7 @@ export const AdditionalOptionValue = ({
   const [dispatlocalState, setLocalState] = useState(cachedState);
   const { scheme, dispatch } = useContext(TotalDataContext);
 
-  const schemeMultiplier = scheme[option.name] || 1;
+  const schemeMultiplier = scheme[getOptionSystemName(option.name)] || 1;
   const handleCheckboxClick = (chosenOptionValue: IProductOptionValue) => {
     const payload = {
       productId,

@@ -15,17 +15,23 @@ export interface IAction {
 export type TTotalDataReducer = (drft: ITotalData, actn: IAction) => void;
 
 export const totalDataReducer: TTotalDataReducer = (draft, action) => {
-  //console.log("action", action);
   switch (action.type) {
     case "rewriteWholeState": {
       return action.payload;
     }
     case "addProduct": {
-      console.log(current(draft.products));
+      const { isUniqueForCategory, parentCat, ...product } = action.payload;
       const idExists = draft.products.some(
-        (item) => item.product_id === action.payload.product_id
+        (item) => item.product_id === product.product_id
       );
-      if (!idExists) draft.products.push(action.payload);
+      if (!idExists) {
+        if (isUniqueForCategory) {
+          draft.products = draft.products.filter(
+            (p) => p.parentCat !== parentCat
+          );
+        }
+        draft.products.push({ ...product, parentCat });
+      }
       break;
     }
     case "removeProduct": {

@@ -1,10 +1,33 @@
 import { each, find, map } from "lodash";
-import { schemeOptions } from "../components/SchemeChoose";
+import { schemeOptions, getOptionSystemName } from "../components/SchemeChoose";
 export const reduceNumberFromString = (price) => {
   if (typeof price === "number") return price;
   const numberString = price.replace(/\s/g, "");
   const number = parseInt(numberString);
   return number;
+};
+
+const findOptionById = (arr, optionId) => {
+  for (const item of arr) {
+    if (Array.isArray(item.products)) {
+      for (const product of item.products) {
+        if (Array.isArray(product.options)) {
+          for (const option of product.options) {
+            if (option.option_id == optionId) {
+              return option;
+            }
+          }
+        }
+      }
+    }
+    if (Array.isArray(item.subcategories)) {
+      const foundOption = findOptionById(item.subcategories, optionId);
+      if (foundOption) {
+        return foundOption;
+      }
+    }
+  }
+  return null;
 };
 
 const getAdditionalOptionsRaw = (inputString) => {
@@ -116,12 +139,11 @@ export const getTotalDataQueryString = (totalData) => {
   return tdString;
 };
 
-export const generateUrlLink = (totalData2) => {
-  let configString = "";
+export const generateUrlLink = (totalData2, scheme) => {
+  let configString = `?scheme_id=${scheme.id}`;
   let index = 0;
   for (const product of totalData2.products) {
-    const urlPrefix = index === 0 ? "?" : "&";
-    configString += `${urlPrefix}pr_id=${product.product_id}`;
+    configString += `&pr_id=${product.product_id}`;
     if (product?.additional_options?.length) {
       for (const option of product?.additional_options) {
         configString += `ad_opt=${option.id}__ch_val=${option.chosenOptionValue.id}`;
@@ -136,8 +158,6 @@ export const generateUrlLink = (totalData2) => {
   navigator.clipboard
     .writeText(domainName + configString)
     .then(() => alert("Ссылка скопирована!"));
-  //console.log("totalData2", totalData2);
-  //console.log("string", configString);
 };
 
 export const clearQueryParams = () => {
@@ -198,24 +218,66 @@ function findStepInDeepArray(arr, productId, dispatch, openedCats = []) {
   return { product: foundProduct, openedCategories };
 }
 
-const getProductIdFromUrlString = (str) => {
-  const match = str.match(/(\d+)/);
-  if (match) return parseInt(match[0], 10);
-};
+export const getIdAndOptions = (inputString, steps, scheme) => {
+  const result = {};
+  const options = [];
 
-export const hydrateState = ({ params, dispatch, steps, setOpenedMenus }) => {
-  if (!Object.keys(params).length) return;
-  let chosenSteps;
-  if (Array.isArray(params.pr_id)) {
-    chosenSteps = map(params.pr_id, (value, key) => {
-      const id = getProductIdFromUrlString(value);
-      return findStepInDeepArray(steps, id, dispatch);
-    }).filter((i) => i.product);
-  } else {
-    const id = getProductIdFromUrlString(params.pr_id);
-    chosenSteps = [findStepInDeepArray(steps, id, dispatch)].filter((i) => i);
+  const idMatch = inputString.match(/(\d+)/);
+  if (idMatch) {
+    result.id = idMatch[1];
   }
-  console.log("chosenSteps", chosenSteps);
+
+  const optionMatches = inputString.matchAll(/ad_opt=(\d+)__ch_val=(\d+)/g);
+  for (const optionMatch of optionMatches) {
+    const optionId = optionMatch[1];
+    const chosenValue = optionMatch[2];
+    const foundAdditionalOption = findOptionById(steps, optionId);
+    const foundChosenOptionValue = find(
+      foundAdditionalOption.product_option_value,
+      { option_value_id: String(chosenValue) }
+    );
+    options.push({
+      id: optionId,
+      name: foundAdditionalOption.name,
+      chosenOptionValue: {
+        id: chosenValue,
+        name: foundChosenOptionValue.name,
+        price: parseInt(foundChosenOptionValue.price),
+        count: scheme[getOptionSystemName(foundAdditionalOption.name)],
+      },
+    });
+  }
+
+  if (options.length > 0) {
+    result.options = options;
+  } else {
+    result.options = []; // Set options to an empty array when no options are found.
+  }
+
+  return result;
+};
+export const hydrateState = ({
+  params,
+  dispatch,
+  steps,
+  setOpenedMenus,
+  setScheme,
+}) => {
+  if (!Object.keys(params).length) return;
+  const scheme = find(schemeOptions, { id: Number(params.scheme_id) });
+  setScheme(scheme);
+  let chosenSteps;
+  if (!Array.isArray(params.pr_id)) {
+    params.pr_id = [params.pr_id];
+  }
+  chosenSteps = map(params.pr_id, (value, key) => {
+    const { id, options } = getIdAndOptions(value, steps, scheme);
+    const step = findStepInDeepArray(steps, id, dispatch);
+    if (!step.product) return;
+    step.product["additional_options"] = options;
+    return step;
+  }).filter((i) => i);
+  console.log("steps", chosenSteps);
   for (const chosenStep of chosenSteps) {
     if (chosenStep.product) {
       dispatch({

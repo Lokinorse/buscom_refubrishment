@@ -45,6 +45,7 @@ export const Refubrishment = () => {
   window["config"] = urlConfig;
 
   useEffect(() => {
+    if (!steps?.length) return;
     const urlSearchParams = new URLSearchParams(window.location.search);
     const params = {};
 
@@ -58,7 +59,7 @@ export const Refubrishment = () => {
         params[key].push(value);
       }
     });
-    hydrateState({ params, dispatch, steps, setOpenedMenus });
+    hydrateState({ params, dispatch, steps, setOpenedMenus, setScheme });
   }, [steps]);
 
   /*   useEffect(() => {
@@ -100,8 +101,11 @@ export const Refubrishment = () => {
               <div>&nbsp;</div>
               <div style={{ fontWeight: "bold" }}>{scheme.title}</div>
             </div>
-            <button onClick={() => generateUrlLink(totalData2)}>
-              Скопировать ссылку на кофигурацию
+            <button
+              className="url_link_btn"
+              onClick={() => generateUrlLink(totalData2, scheme)}
+            >
+              Скопировать ссылку на конфигурацию
             </button>
           </div>
         )}

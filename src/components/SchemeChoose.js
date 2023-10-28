@@ -1,9 +1,29 @@
 import React from "react";
 import { MenuItem } from "./MenuItem";
 
-export const schemeRelatedOptionsMap = {
-  foldingSeats: "",
-  armrests: "",
+export const getOptionSystemName = (rusName) => {
+  switch (rusName) {
+    case "Опора":
+      return "pillar";
+    case "Ремень":
+      return "belt";
+    case "Подлокотник":
+      return "armrests";
+    case "Сетка на спинку":
+      return "backNet";
+    case "Столик на спинку":
+      return "backTable";
+    case "Материал":
+      return "material";
+    case "Подголовник на липучке":
+      return "headrest";
+    case "Откидная спинка":
+      return "foldingSeats";
+    default:
+      //todo: убрать алерт на проде
+      alert("Недобавленное имя опции!", rusName);
+      return rusName;
+  }
 };
 
 export const schemeOptions = [
@@ -12,13 +32,13 @@ export const schemeOptions = [
     title: "14 мест",
     seats: 14,
     foldingSeats: 11,
-    Опора: 14,
+    pillar: 14,
     armrests: 9,
     backNet: 14,
     backTable: 14,
     material: 14,
     headrest: 14,
-    Ремень: 14,
+    belt: 14,
     img: "14.jpg",
   },
   {

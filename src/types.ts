@@ -76,6 +76,7 @@ export type TSteps = IStep[];
 export interface ITDProduct {
   product_id: string;
   count: number;
+  parentCat: string;
   additional_options: any[];
 }
 export interface ITotalData {

@@ -39,7 +39,12 @@ const getFullPrice = (product, totalData2) => {
   };
 };
 
-export const ProductCard = ({ product, isSeats }: IProductCardProps) => {
+export const ProductCard = ({
+  parentCat,
+  product,
+  isSeats,
+  canPurchaseSingleProduct,
+}: IProductCardProps) => {
   const [showOptions, setShowOptions] = useState(false);
   const { totalData2, dispatch, scheme } = useContext(TotalDataContext);
   const [btnTouched, setBtnTouched] = useState(false);
@@ -50,7 +55,11 @@ export const ProductCard = ({ product, isSeats }: IProductCardProps) => {
   const addProduct = () => {
     dispatch({
       type: "addProduct",
-      payload: productPayload,
+      payload: {
+        ...productPayload,
+        isUniqueForCategory: canPurchaseSingleProduct,
+        parentCat,
+      },
     });
     setBtnTouched(true);
   };
@@ -67,12 +76,7 @@ export const ProductCard = ({ product, isSeats }: IProductCardProps) => {
     (pr) => pr.product_id == product.product_id
   );
 
-  const btnAnimationClassName = btnTouched
-    ? isProductSelected
-      ? "toggle_rmv"
-      : "toggle_add"
-    : "";
-
+  const btnAnimationClassName = isProductSelected ? "toggle_rmv" : "toggle_add";
   const cancelHandler = () => {
     setShowOptions(false);
     dispatch({ type: "restoreFrozenState", payload: null });
@@ -125,8 +129,8 @@ export const ProductCard = ({ product, isSeats }: IProductCardProps) => {
             onClick={isProductSelected ? removeProduct : addProduct}
           >
             <div className={`product_btn_text ${btnAnimationClassName}`}>
-              <span>{isProductSelected ? "Удалить" : "Добавить"}</span>
-              {/* <span>Добавить</span> <span>Удалить</span> */}
+              {/* <span>{isProductSelected ? "Удалить" : "Добавить"}</span> */}
+              <span>Добавить</span> <span>Удалить</span>
             </div>
           </button>
         </div>

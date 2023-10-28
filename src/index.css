@@ -334,6 +334,21 @@ dialog {
   opacity: 1;
 }
 
+.url_link_btn {
+  height: 40px;
+  border-radius: 37px;
+  background: #19b500;
+  color: white;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0 10px;
+}
+
+.url_link_btn:active {
+  background: #0e6b00;
+}
+
 .add_button {
   border-radius: 37px;
   background: #19b500;
@@ -394,7 +409,7 @@ dialog {
 .product_btn_text.toggle_rmv {
   animation: slideInText 0.7s ease forwards;
 }
-.product_btn_text.toggle_add {
+.product_btn_text.toggle_rmv {
   animation: slideOutText 0.7s ease forwards;
 }
 
@@ -475,14 +490,7 @@ button.add_button[disabled] {
   left: 0;
   z-index: 1000;
   background-color: rgba(0, 0, 0, 0.5);
-  /*   opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s, visibility 0.3s; */
 }
-/* .modal_window_wrapper.show {
-  opacity: 1;
-  visibility: visible;
-} */
 
 .modal_content {
   position: relative;

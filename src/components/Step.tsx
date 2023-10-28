@@ -17,7 +17,7 @@ export const Step = ({
   forceOpen = false,
 }) => {
   const { scheme } = useContext(TotalDataContext);
-  const { name, products, sort_order } = step;
+  const { name, products, sort_order, column } = step;
   const [selectedOption, setSelectedOption] = useState(null);
   const setSelectedOptionHandler = (val) => {
     const updatedSelectedOption = { ...val };
@@ -38,38 +38,6 @@ export const Step = ({
       setSelectedOptionHandler(currentSelectOption);
     }
   }, [step, totalData]);
-
-  const setCountToTotalData = useCallback(
-    (val: any) => {
-      setTotalData((prevState) => ({
-        ...prevState,
-        [step.category_id]: {
-          ...prevState[step.category_id],
-          selected_option: {
-            ...prevState[step.category_id].selected_option,
-            count: val,
-          },
-        },
-      }));
-    },
-    [setTotalData]
-  );
-
-  const setOptionsToTotalData = useCallback(
-    (id, optionName, option) => {
-      setTotalData((prevState) => ({
-        ...prevState,
-        [step.category_id]: {
-          ...prevState[step.category_id],
-          additional_options: {
-            ...prevState[step.category_id].additional_options,
-            [id]: { ...option, option_name: optionName },
-          },
-        },
-      }));
-    },
-    [setTotalData, scheme]
-  );
 
   /*   useEffect(() => {
     setTotalData((prev) => {
@@ -101,6 +69,8 @@ export const Step = ({
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           {products.map((product) => (
             <ProductCard
+              parentCat={step.category_id}
+              canPurchaseSingleProduct={column === "666"}
               key={product.product_id}
               product={product}
               isSeats={isSeats}

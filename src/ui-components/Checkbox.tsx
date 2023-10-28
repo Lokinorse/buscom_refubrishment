@@ -27,7 +27,7 @@ export const Checkbox = ({
                 type="checkbox"
                 value={item.name}
                 checked={checkedValue === item.name}
-                onChange={(event) => {
+                onChange={() => {
                   handleClick(item);
                 }}
               />
