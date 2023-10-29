@@ -6,6 +6,7 @@ import { useRefubrishmentQueries } from "../services/useRefubrishmentServices";
 import { hydrateState, generateUrlLink } from "../utils/helpers";
 import type { ITotalData } from "../types";
 import { IAction, totalDataReducer } from "../services/totalDataReducer";
+import { Loading } from "../ui-components/Loading";
 
 //TODO: Разрезолвить кейс, при котором ссылка копируется с изначально выставленным /?
 
@@ -32,6 +33,7 @@ export const TotalDataContext = createContext<ContextType | undefined>(
 
 export const Refubrishment = () => {
   const { steps } = useRefubrishmentQueries();
+  const [showCopyTooltip, setShowCopyTooltip] = useState(false);
   const [openedMenus, setOpenedMenus] = useState([]);
   const [scheme, setScheme] = useState(null);
   const [totalData, setTotalData] = useState({});
@@ -83,6 +85,16 @@ export const Refubrishment = () => {
     setScheme(null);
     setTotalData({});
   };
+
+  const generateUrlHandler = () => {
+    generateUrlLink(totalData2, scheme);
+    setShowCopyTooltip(true);
+    setTimeout(() => {
+      setShowCopyTooltip(false);
+    }, 1000);
+  };
+
+  if (!steps?.length) return <Loading />;
   return (
     <TotalDataContext.Provider value={{ totalData2, dispatch, scheme }}>
       <div className="wrapper">
@@ -101,10 +113,8 @@ export const Refubrishment = () => {
               <div>&nbsp;</div>
               <div style={{ fontWeight: "bold" }}>{scheme.title}</div>
             </div>
-            <button
-              className="url_link_btn"
-              onClick={() => generateUrlLink(totalData2, scheme)}
-            >
+            {true && <div>скопировано!</div>}
+            <button className="url_link_btn" onClick={generateUrlHandler}>
               Скопировать ссылку на конфигурацию
             </button>
           </div>
@@ -115,7 +125,6 @@ export const Refubrishment = () => {
               const isSeats = step.name === "Сиденья";
               return (
                 <div key={step.category_id}>
-                  {`ID: ${step.category_id}`}
                   <Step
                     openedMenus={openedMenus}
                     forceOpen={openedMenus.includes(step.category_id)}

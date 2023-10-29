@@ -152,10 +152,8 @@ export const generateUrlLink = (totalData2, scheme) => {
   const domainName =
     process.env.NODE_ENV === "development"
       ? "http://localhost:3000/"
-      : "https://bus-com.ru/";
-  navigator.clipboard
-    .writeText(domainName + configString)
-    .then(() => alert("Ссылка скопирована!"));
+      : "https://bus-com.ru/refubrishment";
+  navigator.clipboard.writeText(domainName + configString);
 };
 
 export const clearQueryParams = () => {

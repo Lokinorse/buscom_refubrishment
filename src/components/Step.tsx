@@ -82,7 +82,6 @@ export const Step = ({
           {subcategories.map((subCat) => {
             return (
               <div key={subCat.category_id}>
-                {`ID: ${subCat.category_id}`}
                 <Step
                   openedMenus={openedMenus}
                   forceOpen={openedMenus.includes(subCat.category_id)}

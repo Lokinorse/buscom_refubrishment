@@ -46,6 +46,7 @@ const getItemPriceString = (item) => {
 
 const getTotalPrice = (totalData2) => {
   let total = 0;
+  console.log("totalData2", totalData2);
   for (const product of totalData2.products) {
     const productPrice = getNumberPriceFromProductPrice(product.price);
     const productCount = product.count || 1;
@@ -68,9 +69,7 @@ export const TotalWidget = ({ totalData, resetSchemeHandler, urlConfig }) => {
 
   const copyCurrentConfigURL = () => {
     const currentURL = window.location.href;
-    navigator.clipboard
-      .writeText(currentURL + urlConfig)
-      .then(() => alert("Ссылка скопирована!"));
+    navigator.clipboard.writeText(currentURL + urlConfig);
   };
 
   return (
