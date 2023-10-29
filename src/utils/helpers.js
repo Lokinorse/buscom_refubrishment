@@ -282,12 +282,17 @@ export const hydrateState = ({
     const parentCat =
       chosenStep.openedCategories[chosenStep.openedCategories.length - 1];
     if (chosenStep.product) {
+      const allParents = chosenStep.openedCategories.map((i) => i.id);
+      // 119 - категория сидений с кастомной логикой кол-ва
+      const isSeats = allParents.includes("119");
       dispatch({
         type: "addProduct",
         payload: {
           ...chosenStep.product,
           isUniqueForCategory: parentCat.column === "666",
           parentCat: parentCat.id,
+          count: isSeats ? scheme.seats : 1,
+          allParents,
         },
       });
     }
@@ -345,4 +350,28 @@ export const getNumberPriceFromProductPrice = (stringPrice) => {
   const numericString = stringPrice.replace(/[^0-9]/g, "");
   const numericValue = parseInt(numericString, 10);
   return numericValue;
+};
+
+export const getStepTotalSum = (totalData, stepId, scheme) => {
+  let output = 0;
+  for (const product of totalData.products) {
+    // 119 - категория сидений с кастомной логикой кол-ва
+    const isSeats = product.allParents.includes("119");
+    if (product.allParents.includes(stepId)) {
+      if (isSeats) {
+        output += getNumberPriceFromProductPrice(product.price) * scheme.seats;
+      } else {
+        output += getNumberPriceFromProductPrice(product.price);
+      }
+      if (product.additional_options?.length) {
+        for (const option of product?.additional_options) {
+          output +=
+            option.chosenOptionValue.count * option.chosenOptionValue.price;
+        }
+      }
+    }
+  }
+  return output;
+  console.log("getStepTotalSum", totalData);
+  console.log("stepId", stepId);
 };

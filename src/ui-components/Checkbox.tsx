@@ -19,8 +19,9 @@ export const Checkbox = ({
   return (
     <div className="checkbox">
       {option.product_option_value.map((item) => {
+        console.log("item", item);
         return (
-          <div className="checkbox_label">
+          <div className="checkbox_label" key={item.option_value_id}>
             <label>
               <input
                 disabled={disabled}

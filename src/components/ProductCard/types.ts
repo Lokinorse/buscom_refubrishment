@@ -4,4 +4,5 @@ export interface IProductCardProps {
   product: IProduct;
   isSeats: boolean;
   canPurchaseSingleProduct: boolean;
+  allParents: string[];
 }

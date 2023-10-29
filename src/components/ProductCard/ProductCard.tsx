@@ -30,7 +30,11 @@ const getFullPrice = (product, totalData2) => {
 
   const additionalOptionsPrice =
     targetProduct?.additional_options?.reduce((accumulator, currentProduct) => {
-      return accumulator + currentProduct.chosenOptionValue.price;
+      return (
+        accumulator +
+        currentProduct.chosenOptionValue.price *
+          currentProduct.chosenOptionValue.count
+      );
     }, 0) || 0;
   return {
     singleItemPrice: productSingleItemPrice,
@@ -40,6 +44,7 @@ const getFullPrice = (product, totalData2) => {
 };
 
 export const ProductCard = ({
+  allParents,
   parentCat,
   product,
   isSeats,
@@ -58,6 +63,7 @@ export const ProductCard = ({
       payload: {
         ...productPayload,
         isUniqueForCategory: canPurchaseSingleProduct,
+        allParents,
         parentCat,
       },
     });

@@ -303,7 +303,7 @@ dialog {
   display: block;
 }
 
-.product_wrapper .price {
+.price {
   font-weight: bold;
   flex-basis: 15%;
   text-align: right;
@@ -510,4 +510,47 @@ button.add_button[disabled] {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.tooltip_container {
+  position: relative;
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.4s;
+}
+
+.tooltip_container.show {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltip_content {
+  position: absolute;
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+}
+
+.tooltip_arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 8px;
+  border-color: #333 transparent transparent transparent;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.menu_item_right_part {
+  display: flex;
+  align-items: center;
 }

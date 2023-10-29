@@ -4,7 +4,6 @@ import { Step } from "./Step";
 import { TotalWidget, SchemeChoose } from ".";
 import { useRefubrishmentQueries } from "../services/useRefubrishmentServices";
 import { hydrateState, generateUrlLink } from "../utils/helpers";
-import type { ITotalData } from "../types";
 import { IAction, totalDataReducer } from "../services/totalDataReducer";
 import { Loading } from "../ui-components/Loading";
 
@@ -18,7 +17,7 @@ const reducerInitialState = {
 export interface ITotalDataState {
   products: any[];
   tempState?: any;
-  [key: string]: any | undefined;
+  [key: string]: any;
 }
 
 interface ContextType {
@@ -33,6 +32,7 @@ export const TotalDataContext = createContext<ContextType | undefined>(
 
 export const Refubrishment = () => {
   const { steps } = useRefubrishmentQueries();
+  const [tooltipTimeout, setTooltipTimeout] = useState(null);
   const [showCopyTooltip, setShowCopyTooltip] = useState(false);
   const [openedMenus, setOpenedMenus] = useState([]);
   const [scheme, setScheme] = useState(null);
@@ -64,19 +64,6 @@ export const Refubrishment = () => {
     hydrateState({ params, dispatch, steps, setOpenedMenus, setScheme });
   }, [steps]);
 
-  /*   useEffect(() => {
-    if (!scheme) {
-      setUrlConfig("");
-      return;
-    }
-    setUrlConfig("?conf_s=" + scheme.id);
-  }, [scheme]);
-  useEffect(() => {
-    setUrlConfig(
-      concatSandTDStrings(urlConfig, getTotalDataQueryString(totalData))
-    );
-  }, [totalData]); */
-
   const setSchemeHandler = (chosenScheme) => {
     setScheme(chosenScheme);
   };
@@ -89,10 +76,17 @@ export const Refubrishment = () => {
   const generateUrlHandler = () => {
     generateUrlLink(totalData2, scheme);
     setShowCopyTooltip(true);
-    setTimeout(() => {
-      setShowCopyTooltip(false);
-    }, 1000);
+    if (tooltipTimeout) {
+      clearTimeout(tooltipTimeout);
+    }
+    const timeout = setTimeout(() => setShowCopyTooltip(false), 3000);
+    setTooltipTimeout(timeout);
   };
+  useEffect(() => {
+    return () => {
+      if (tooltipTimeout) clearTimeout(tooltipTimeout);
+    };
+  }, [tooltipTimeout]);
 
   if (!steps?.length) return <Loading />;
   return (
@@ -108,15 +102,24 @@ export const Refubrishment = () => {
               padding: "0 10px",
             }}
           >
-            <div style={{ display: "flex" }}>
+            <div style={{ display: "flex", alignItems: "center" }}>
               <div>Вы выбрали схему:</div>
               <div>&nbsp;</div>
               <div style={{ fontWeight: "bold" }}>{scheme.title}</div>
             </div>
-            {true && <div>скопировано!</div>}
-            <button className="url_link_btn" onClick={generateUrlHandler}>
-              Скопировать ссылку на конфигурацию
-            </button>
+            <div className="copy_btn_wrapper">
+              <div
+                className={`tooltip_container ${showCopyTooltip ? "show" : ""}`}
+              >
+                <div className="tooltip_content">
+                  <div className="tooltip_arrow"></div>
+                  Ссылка скопирована!
+                </div>
+              </div>
+              <button className="url_link_btn" onClick={generateUrlHandler}>
+                Скопировать ссылку на конфигурацию
+              </button>
+            </div>
           </div>
         )}
         <div className="tiles_wrapper">
@@ -126,13 +129,12 @@ export const Refubrishment = () => {
               return (
                 <div key={step.category_id}>
                   <Step
-                    openedMenus={openedMenus}
+                    allParents={[step.category_id]}
                     forceOpen={openedMenus.includes(step.category_id)}
+                    openedMenus={openedMenus}
+                    key={step.category_id}
                     isSeats={isSeats}
                     step={step}
-                    key={step.category_id}
-                    setTotalData={setTotalData}
-                    totalData={totalData}
                   />
                 </div>
               );
