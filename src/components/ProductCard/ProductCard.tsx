@@ -113,7 +113,7 @@ export const ProductCard = ({
               }`}
               onClick={() => setShowOptions(!showOptions)}
             >
-              Дополнительные опции
+              <div className="extra_options_btn_text">Дополнительные опции</div>
             </button>
           )}
           {showOptions && (

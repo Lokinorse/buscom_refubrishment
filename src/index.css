@@ -294,8 +294,9 @@ dialog {
 .product_wrapper .img {
   flex-basis: 25%;
   width: 100%;
-  /*   background-color: red; */
+  min-width: 165px;
   max-height: 300px;
+  min-height: 170px;
 }
 .product_wrapper .img img {
   width: 100%;
@@ -314,6 +315,11 @@ dialog {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+.extra_options_btn_text {
+  padding: 0 10px;
+  text-wrap: nowrap;
 }
 
 .extra_options_button {
@@ -337,7 +343,7 @@ dialog {
 .url_link_btn {
   height: 40px;
   border-radius: 37px;
-  background: #19b500;
+  background: #464ce7;
   color: white;
   border: none;
   font-size: 14px;
@@ -346,7 +352,7 @@ dialog {
 }
 
 .url_link_btn:active {
-  background: #0e6b00;
+  background: #272cb7;
 }
 
 .add_button {
@@ -554,3 +560,56 @@ button.add_button[disabled] {
   display: flex;
   align-items: center;
 }
+
+.contact_btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  border-radius: 37px;
+  background: #19b500;
+  color: white;
+  border: none;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0 10px;
+}
+
+.phone_svg_wrapper {
+  padding-top: 3px;
+  padding-left: 7px;
+}
+
+.phone_svg_wrapper svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+}
+
+.contact_btn:active {
+  background: #168604;
+}
+
+/* //////// 1039px ////////*/
+@media (max-width: 1129px) {
+  .wrapper {
+    padding: 20px 10px;
+  }
+}
+/* //////// 880px ////////*/
+@media (max-width: 880px) {
+  .product_wrapper {
+    flex-direction: column;
+  }
+  .product_wrapper .left_block {
+    flex-direction: row-reverse;
+    align-items: center;
+  }
+}
+/* //////// 550px ////////*/
+/* @media (max-width: 1129px) {
+  .wrapper {
+    padding: 20px 10px;
+  }
+} */

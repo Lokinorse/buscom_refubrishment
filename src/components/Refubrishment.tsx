@@ -6,6 +6,8 @@ import { useRefubrishmentQueries } from "../services/useRefubrishmentServices";
 import { hydrateState, generateUrlLink } from "../utils/helpers";
 import { IAction, totalDataReducer } from "../services/totalDataReducer";
 import { Loading } from "../ui-components/Loading";
+import { ModalWindow } from "../ui-components/ModalWindow";
+import { ContactButton } from "../components/ContactButton";
 
 //TODO: Разрезолвить кейс, при котором ссылка копируется с изначально выставленным /?
 
@@ -32,6 +34,7 @@ export const TotalDataContext = createContext<ContextType | undefined>(
 
 export const Refubrishment = () => {
   const { steps } = useRefubrishmentQueries();
+  const [makeOrderModal, setMakeOrderModal] = useState(false);
   const [tooltipTimeout, setTooltipTimeout] = useState(null);
   const [showCopyTooltip, setShowCopyTooltip] = useState(false);
   const [openedMenus, setOpenedMenus] = useState([]);
@@ -92,7 +95,7 @@ export const Refubrishment = () => {
   return (
     <TotalDataContext.Provider value={{ totalData2, dispatch, scheme }}>
       <div className="wrapper">
-        <h1>Переоборудование</h1>
+        <h1 style={{ margin: 0 }}>Переоборудование</h1>
         {scheme && <TotalWidget totalData={totalData} urlConfig={urlConfig} />}
         {scheme && (
           <div
@@ -102,6 +105,8 @@ export const Refubrishment = () => {
               padding: "0 10px",
             }}
           >
+            <ContactButton clickHandler={() => setMakeOrderModal(true)} />
+
             <div style={{ display: "flex", alignItems: "center" }}>
               <div>Вы выбрали схему:</div>
               <div>&nbsp;</div>
@@ -143,7 +148,18 @@ export const Refubrishment = () => {
             <SchemeChoose setScheme={setSchemeHandler} />
           )}
         </div>
+        <ContactButton clickHandler={() => setMakeOrderModal(true)} />
       </div>
+      {makeOrderModal && (
+        <ModalWindow
+          title={"Заказать переоборудование"}
+          onClose={() => {
+            setMakeOrderModal(false);
+          }}
+        >
+          <form></form>
+        </ModalWindow>
+      )}
     </TotalDataContext.Provider>
   );
 };
