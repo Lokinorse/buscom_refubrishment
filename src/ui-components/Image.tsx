@@ -10,6 +10,7 @@ export function ImageModal({ image }) {
     minWidth: "80vh",
     minHeight: "80vh",
     backgroundSize: "contain",
+    backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
   };
   const imageStyle = {

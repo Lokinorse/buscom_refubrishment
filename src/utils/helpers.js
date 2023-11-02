@@ -140,6 +140,7 @@ export const getTotalDataQueryString = (totalData) => {
 };
 
 export const generateUrlLink = (totalData2, scheme) => {
+  if (!scheme) return;
   let configString = `?scheme_id=${scheme.id}`;
   for (const product of totalData2.products) {
     configString += `&pr_id=${product.product_id}`;
@@ -153,7 +154,7 @@ export const generateUrlLink = (totalData2, scheme) => {
     process.env.NODE_ENV === "development"
       ? "http://localhost:3000/"
       : "https://bus-com.ru/refubrishment";
-  navigator.clipboard.writeText(domainName + configString);
+  return domainName + configString;
 };
 
 export const clearQueryParams = () => {
@@ -374,4 +375,24 @@ export const getStepTotalSum = (totalData, stepId, scheme) => {
   return output;
   console.log("getStepTotalSum", totalData);
   console.log("stepId", stepId);
+};
+
+export const getTotalPrice = (totalData2) => {
+  let total = 0;
+  for (const product of totalData2.products) {
+    const productPrice = getNumberPriceFromProductPrice(product.price);
+    const productCount = product.count || 1;
+    total += productPrice * productCount;
+    if (product.additional_options) {
+      for (const option of product.additional_options) {
+        total +=
+          option.chosenOptionValue.count * option.chosenOptionValue.price;
+      }
+    }
+  }
+  return total;
+};
+
+export const beautifySum = (sum) => {
+  return sum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 };

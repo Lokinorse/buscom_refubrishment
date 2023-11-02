@@ -1,12 +1,14 @@
 import { ITotalData } from "../types";
 import { current } from "immer";
 import { cloneDeep } from "lodash";
+import { reducerInitialState } from "../components/Refubrishment";
 export type TActionId =
   | "addProduct"
   | "removeProduct"
   | "restoreFrozenState"
   | "forgetFrozenState"
   | "rewriteWholeState"
+  | "resetState"
   | "toggleAdditionalOptionCheckbox";
 export interface IAction {
   type: TActionId;
@@ -19,6 +21,11 @@ export const totalDataReducer: TTotalDataReducer = (draft, action) => {
     case "rewriteWholeState": {
       return action.payload;
     }
+
+    case "resetState": {
+      return reducerInitialState;
+    }
+
     case "addProduct": {
       const { isUniqueForCategory, parentCat, ...product } = action.payload;
       const idExists = draft.products.some(

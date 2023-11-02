@@ -30,7 +30,6 @@ code {
   font-family: Gilroy;
   font-size: 32px;
   font-style: normal;
-  font-weight: 700;
   line-height: normal;
 }
 
@@ -218,9 +217,12 @@ code {
   background: #eee;
 }
 
-.menu_item .header {
-  /* border: 5px solid green; */
+.menu_item .menu_item {
+  background: #d3d3d3;
+  border-radius: 31px;
+}
 
+.menu_item .header {
   display: flex;
   align-items: center;
   padding: 0 15px;
@@ -290,13 +292,12 @@ dialog {
 .product_wrapper .info {
   flex-basis: 65%;
 }
-
 .product_wrapper .img {
   flex-basis: 25%;
-  width: 100%;
-  min-width: 165px;
   max-height: 300px;
-  min-height: 170px;
+  min-height: 90px;
+  min-width: 165px;
+  width: 100%;
 }
 .product_wrapper .img img {
   width: 100%;
@@ -317,6 +318,10 @@ dialog {
   justify-content: space-between;
 }
 
+.product_wrapper .chosen {
+  background-color: #b3d3c2;
+}
+
 .extra_options_btn_text {
   padding: 0 10px;
   text-wrap: nowrap;
@@ -326,12 +331,11 @@ dialog {
   opacity: 0;
   transition: all 0.4s;
   border-radius: 37px;
-  background: #19b500;
+  background: #0f8e49;
   color: white;
   border: none;
-  height: 40px;
+  height: 32px;
   font-size: 17px;
-  font-weight: bold;
   cursor: pointer;
   margin-top: auto;
 }
@@ -341,40 +345,35 @@ dialog {
 }
 
 .url_link_btn {
-  height: 40px;
-  border-radius: 37px;
-  background: #464ce7;
-  color: white;
+  background: #ffffff;
   border: none;
-  font-size: 14px;
+  color: #f27171;
   cursor: pointer;
+  font-size: 14px;
   padding: 0 10px;
+  text-decoration: underline;
 }
 
 .url_link_btn:active {
-  background: #272cb7;
+  color: red;
 }
 
 .add_button {
-  border-radius: 37px;
-
-  color: white;
   border: none;
-  height: 40px;
-  width: 120px;
-  font-size: 17px;
-  font-weight: bold;
+  border-radius: 37px;
+  color: #fff;
   cursor: pointer;
+  font-size: 15px;
+  height: 32px;
   overflow: hidden;
-  transition: all 0.5s;
-  transform: translateX(0%);
+  width: 110px;
 }
 
 .product_btn_text {
   width: 200px;
   display: flex;
   justify-content: space-between;
-  padding-left: 14px;
+  padding-left: 16px;
   transition: all 0.5s;
   transform: translateX(0%);
 }
@@ -389,7 +388,7 @@ dialog {
 }
 
 .product_btn_text.toggle_rmv {
-  transform: translateX(-57%);
+  transform: translateX(-63%);
 }
 .product_btn_text.toggle_add {
   transform: translateX(0%);
@@ -400,7 +399,7 @@ dialog {
   transition: all 0.5s;
 }
 .add_button.toggle_add {
-  background: #19b500;
+  background: #0f8e49;
   transition: all 0.5s;
 }
 
@@ -563,17 +562,18 @@ button.add_button[disabled] {
 
 .contact_btn {
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 40px;
-  border-radius: 37px;
-  background: #19b500;
-  color: white;
+  background: #0f8e49;
   border: none;
-  font-size: 17px;
-  font-weight: bold;
+  border-radius: 37px;
+  color: #fff;
   cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+  min-height: 40px;
+  justify-content: center;
   padding: 0 10px;
+  flex-basis: 33%;
 }
 
 .phone_svg_wrapper {
@@ -590,6 +590,59 @@ button.add_button[disabled] {
 .contact_btn:active {
   background: #168604;
 }
+
+/* FEEDBACK FORM */
+.form_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+
+.required_dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: "red";
+}
+
+.form_container h2 {
+  margin: 0 0 20px;
+}
+
+.form_group {
+  margin-bottom: 15px;
+}
+
+.form_group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form_group input {
+  width: auto;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.submit_button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.copy_btn_wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+/* FEEDBACK FORM */
 
 /* //////// 1039px ////////*/
 @media (max-width: 1129px) {

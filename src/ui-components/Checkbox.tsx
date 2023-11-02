@@ -1,7 +1,7 @@
 import React from "react";
 
 import { IProductOption } from "../types";
-import { reduceNumberFromString } from "../utils/helpers";
+import { reduceNumberFromString, beautifySum } from "../utils/helpers";
 
 export const Checkbox = ({
   schemeMultiplier = 1,
@@ -32,12 +32,12 @@ export const Checkbox = ({
                   handleClick(item);
                 }}
               />
-              {`${item.name} ${
+              {`${item.name} ${beautifySum(
                 reduceNumberFromString(item.price) * schemeMultiplier
-              }₽ ${
+              )}₽ ${
                 item.name !== "Нет"
-                  ? `(${schemeMultiplier}x${reduceNumberFromString(
-                      item.price
+                  ? `(${schemeMultiplier} x ${beautifySum(
+                      reduceNumberFromString(item.price)
                     )} ₽)`
                   : ""
               }`}

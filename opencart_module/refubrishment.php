@@ -1,4 +1,10 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require "mailer/Exception.php";
+require "mailer/PHPMailer.php";
+require "mailer/SMTP.php";
 // https://bus-com.ru/refubrishment
 class ControllerInformationRefubrishment extends Controller {
     public function index() {
@@ -26,6 +32,40 @@ class ControllerInformationRefubrishment extends Controller {
         // Render the page
         $this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/information/refubrishment.tpl', $data));
     }
+
+    public function getCategoryData($category_id) {
+        $productsInTheCat = $this->model_catalog_product->getDisabledProducts(['filter_category_id' => $category_id]);
+        $currentCat = $this->model_catalog_category->getHiddenCategory($category_id);
+        
+        // Make seats first in list
+        if ($currentCat['category_id'] === '91') {
+            $currentCat['sort_order'] = '0';
+        }
+        
+        $currentCat['products'] = [];
+        
+        foreach ($productsInTheCat as $product) {
+            $opts = $this->model_catalog_product->getProductImages($product['product_id']);
+            $product['price'] = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')));
+    
+            if (isset($opts[0]) && isset($opts[0]['image'])) {
+                $product['image'] = $opts[0]['image'];
+            }
+    
+            $pr_options = $this->model_catalog_product->getProductOptions($product['product_id']);
+            $product['options'] = $pr_options;
+            $currentCat['products'][] = $product;
+        }
+        
+        $subcategories = $this->model_catalog_category->getHiddenCategories($category_id);
+        foreach($subcategories as &$subcat){
+            $subcat= $this->getCategoryData($subcat['category_id']);
+        };
+        $currentCat['subcategories'] = $subcategories ?: array();
+        
+        return $currentCat;
+    }
+
     public function getConstructorData() {
         $this->response->addHeader('Content-Type: application/json');
         // TODO: SET NEXT HEADER TO 'https://bus-com.ru' AFTER THE END OF DEV
@@ -37,64 +77,54 @@ class ControllerInformationRefubrishment extends Controller {
     
         $this->load->model('catalog/category');
         $this->load->model('catalog/product');
-        $cats = $this->model_catalog_category->getCategories(89);
+        $cats = $this->model_catalog_category->getHiddenCategories(89);
         $data['categories'] = [];
 
-
-        
-        //seats (step 1)
-        $seatsCat = new stdClass();
-        $seatsCat->sort_order = '1';
-        $seatsCat->name = 'Установка сидений';
-        $seatsCat->category_id = '89';
-        $seatsCat->products = [];
-        // get options for Seats
-        $noOption = $this->model_catalog_product->getProduct('352');
-        $inturistSeat = $this->model_catalog_product->getProduct('249');
-        $inturistSeatLux = $this->model_catalog_product->getProduct('205');
-        
-
-        // get options for options for you can select option while selecting option
-        $inturistSeatOptions = $this->model_catalog_product->getProductOptions($inturistSeat['product_id']);
-        $inturistSeatLuxOptions = $this->model_catalog_product->getProductOptions($inturistSeatLux['product_id']);
-        $inturistSeat['options'] = $inturistSeatOptions;
-        $inturistSeatLux['options'] = $inturistSeatLuxOptions;
-
-        $inturistSeat['description'] = $inturistSeat['meta_description'];
-        $inturistSeatLux['description'] = $inturistSeatLux['meta_description'];
-        $seatsCat->products[] = $noOption;
-        
-        // add options for Seats
-        $seatsCat->products[] = $inturistSeat;
-        $seatsCat->products[] = $inturistSeatLux;
-        // add Seats to categories
-        $data['categories'][] = $seatsCat;
-
-
-
         foreach ($cats as $category) {
-            if ($category['category_id'] === '91') {
-                continue;
-            }
-            $productsInTheCat = $this->model_catalog_product->getProducts(['filter_category_id' => $category['category_id']]);
-            $currentCat = $category;
-            $currentCat['products'] = [];
-            foreach ($productsInTheCat as $prod_id => $product) {
-                $opts = $this->model_catalog_product->getProductImages($product['product_id']);
-                $product['price'] = $this->currency->format($this->tax->calculate($product['price'], $product['tax_class_id'], $this->config->get('config_tax')));
-    
-                if (isset($opts[0]) && isset($opts[0]['image'])) {
-                    $product['image'] = $opts[0]['image'];
-                }
-    
-                $pr_options = $this->model_catalog_product->getProductOptions($product['product_id']);
-                $product['options'] = $pr_options;
-                $currentCat['products'][] = $product;
-            }
-    
-            $data['categories'][] = $currentCat;
-        }        
+            $data['categories'][] = $this->getCategoryData($category['category_id']);
+        }  
         $this->response->setOutput(json_encode($data));
 
+    }
+
+    public function makeOrder() {
+        // Allow requests from any origin (not recommended for production)
+        header("Access-Control-Allow-Origin: *");
+        // Allow the appropriate HTTP methods (e.g., POST)
+        header("Access-Control-Allow-Methods: POST");
+        // Allow the appropriate headers (e.g., Content-Type)
+        header("Access-Control-Allow-Headers: Content-Type");
+
+        $invalid_characters = array("$", "%", "#", "<", ">", "|", "=");
+        $name = str_replace($invalid_characters, "", $_POST["name"]);
+        $phone = str_replace($invalid_characters, "", $_POST["phone"]);
+        $email = str_replace($invalid_characters, "", $_POST["email"]);
+        $order_config = str_replace($invalid_characters, "", $_POST["order_config"]);
+
+        $mail = new PHPMailer;
+
+        $mail->isSMTP();
+        $mail->SMTPAuth = true;
+        $mail->Host = "smtp.yandex.ru";
+        $mail->Port = 465;
+        $mail->Username = "info@bus-com.ru";
+        $mail->Password = "Buscomnew2021";
+        $mail->SMTPSecure = "ssl";
+        $mail->CharSet = "UTF-8";
+        $mail->setFrom("info@bus-com.ru", "ЗАКАЗ ПЕРЕОБОРУДОВАНИЯ 2.0");
+
+
+        $mail->addAddress("info@bus-com.ru", "Zakaz");
+
+        $mail->Subject = "Заказ переоборудования Баском";
+
+        $body =  $name . "\r\n" . $phone . "\r\n" . $email . "\r\n" . $order_config ."\r\n";
+
+        echo $body;
+
+        $mail->isHTML(false);  
+        $mail->Body = nl2br($body);
+        $mail->AltBody = $body;
+        $mail->send();
     }
 }

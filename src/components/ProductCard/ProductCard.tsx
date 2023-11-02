@@ -2,7 +2,10 @@ import React, { useContext, useState } from "react";
 import { TotalDataContext } from "../Refubrishment";
 import { AdditionalOptions } from "./AdditionalOptions";
 import { IProductCardProps } from "./types";
-import { getNumberPriceFromProductPrice } from "../../utils/helpers";
+import {
+  getNumberPriceFromProductPrice,
+  beautifySum,
+} from "../../utils/helpers";
 import { ModalWindow } from "../../ui-components/ModalWindow";
 import { ImageModal } from "../../ui-components/Image";
 
@@ -96,7 +99,7 @@ export const ProductCard = ({
   const { price, singleItemPrice, count } = getFullPrice(product, totalData2);
   return (
     <div>
-      <div className="product_wrapper">
+      <div className={`product_wrapper ${isProductSelected ? "chosen" : ""}`}>
         {product.image && <ImageModal image={product.image} />}
         <div className="info">
           <div className="title">{product.name}</div>
@@ -127,7 +130,7 @@ export const ProductCard = ({
           )}
         </div>
         <div className="left_block">
-          <div className="price">{`${price} ₽ ${
+          <div className="price">{`${beautifySum(price)} ₽ ${
             count > 1 ? `(x${count})` : ""
           }`}</div>
           <button
@@ -135,7 +138,6 @@ export const ProductCard = ({
             onClick={isProductSelected ? removeProduct : addProduct}
           >
             <div className={`product_btn_text ${btnAnimationClassName}`}>
-              {/* <span>{isProductSelected ? "Удалить" : "Добавить"}</span> */}
               <span>Добавить</span> <span>Удалить</span>
             </div>
           </button>

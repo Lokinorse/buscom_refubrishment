@@ -1,9 +1,8 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import { find } from "lodash";
+import React, { useContext } from "react";
 import { MenuItem } from "./MenuItem";
 import { ProductCard } from "./ProductCard/ProductCard";
 import { TotalDataContext } from "./Refubrishment";
-import { getStepTotalSum } from "../utils/helpers";
+import { getStepTotalSum, beautifySum } from "../utils/helpers";
 
 //todo: remove react router dom
 
@@ -27,8 +26,8 @@ export const Step = ({
           stepTotalSum ? (
             <div
               className="price"
-              style={{ marginRight: "20px", color: "#19b500" }}
-            >{`${stepTotalSum} ₽`}</div>
+              style={{ marginRight: "20px", color: "#0f8e49" }}
+            >{`${beautifySum(stepTotalSum)} ₽`}</div>
           ) : (
             ""
           )

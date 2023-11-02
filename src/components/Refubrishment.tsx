@@ -3,15 +3,15 @@ import { useImmerReducer } from "use-immer";
 import { Step } from "./Step";
 import { TotalWidget, SchemeChoose } from ".";
 import { useRefubrishmentQueries } from "../services/useRefubrishmentServices";
-import { hydrateState, generateUrlLink } from "../utils/helpers";
+import { hydrateState, generateUrlLink, getTotalPrice } from "../utils/helpers";
 import { IAction, totalDataReducer } from "../services/totalDataReducer";
 import { Loading } from "../ui-components/Loading";
 import { ModalWindow } from "../ui-components/ModalWindow";
 import { ContactButton } from "../components/ContactButton";
-
+import { FeedbackForm } from "../components/FeedbackForm";
 //TODO: Разрезолвить кейс, при котором ссылка копируется с изначально выставленным /?
 
-const reducerInitialState = {
+export const reducerInitialState = {
   products: [],
   tempState: null,
 };
@@ -39,11 +39,11 @@ export const Refubrishment = () => {
   const [showCopyTooltip, setShowCopyTooltip] = useState(false);
   const [openedMenus, setOpenedMenus] = useState([]);
   const [scheme, setScheme] = useState(null);
-  const [totalData, setTotalData] = useState({});
   const [totalData2, dispatch] = useImmerReducer(
     totalDataReducer,
     reducerInitialState
   );
+  const totalPrice = getTotalPrice(totalData2);
   const [urlConfig, setUrlConfig] = useState("");
   //const [queryParam, updateQueryParam] = useQueryParam("config", "");
   window["state"] = totalData2;
@@ -73,11 +73,19 @@ export const Refubrishment = () => {
 
   const resetSchemeHandler = () => {
     setScheme(null);
-    setTotalData({});
+    dispatch({
+      type: "resetState",
+      payload: null,
+    });
+    window.location.href =
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:3000/"
+        : "https://bus-com.ru/refubrishment";
+    //setTotalData({});
   };
 
   const generateUrlHandler = () => {
-    generateUrlLink(totalData2, scheme);
+    navigator.clipboard.writeText(generateUrlLink(totalData2, scheme));
     setShowCopyTooltip(true);
     if (tooltipTimeout) {
       clearTimeout(tooltipTimeout);
@@ -96,7 +104,7 @@ export const Refubrishment = () => {
     <TotalDataContext.Provider value={{ totalData2, dispatch, scheme }}>
       <div className="wrapper">
         <h1 style={{ margin: 0 }}>Переоборудование</h1>
-        {scheme && <TotalWidget totalData={totalData} urlConfig={urlConfig} />}
+        {scheme && <TotalWidget totalPrice={totalPrice} />}
         {scheme && (
           <div
             style={{
@@ -110,20 +118,19 @@ export const Refubrishment = () => {
             <div style={{ display: "flex", alignItems: "center" }}>
               <div>Вы выбрали схему:</div>
               <div>&nbsp;</div>
-              <div style={{ fontWeight: "bold" }}>{scheme.title}</div>
-            </div>
-            <div className="copy_btn_wrapper">
-              <div
-                className={`tooltip_container ${showCopyTooltip ? "show" : ""}`}
-              >
-                <div className="tooltip_content">
-                  <div className="tooltip_arrow"></div>
-                  Ссылка скопирована!
-                </div>
+              <div style={{ fontWeight: "bold" }}>
+                {`${scheme.title}`} &nbsp;
               </div>
-              <button className="url_link_btn" onClick={generateUrlHandler}>
-                Скопировать ссылку на конфигурацию
-              </button>
+              <div
+                onClick={resetSchemeHandler}
+                style={{
+                  cursor: "pointer",
+                  textDecoration: "underline",
+                  textDecorationSkipInk: "none",
+                }}
+              >
+                ( изменить )
+              </div>
             </div>
           </div>
         )}
@@ -148,6 +155,17 @@ export const Refubrishment = () => {
             <SchemeChoose setScheme={setSchemeHandler} />
           )}
         </div>
+        <div className="copy_btn_wrapper">
+          <div className={`tooltip_container ${showCopyTooltip ? "show" : ""}`}>
+            <div className="tooltip_content">
+              <div className="tooltip_arrow"></div>
+              Ссылка скопирована!
+            </div>
+          </div>
+          <button className="url_link_btn" onClick={generateUrlHandler}>
+            Скопировать ссылку на конфигурацию
+          </button>
+        </div>
         <ContactButton clickHandler={() => setMakeOrderModal(true)} />
       </div>
       {makeOrderModal && (
@@ -157,7 +175,10 @@ export const Refubrishment = () => {
             setMakeOrderModal(false);
           }}
         >
-          <form></form>
+          <FeedbackForm
+            totalPrice={totalPrice}
+            generateConfig={() => generateUrlLink(totalData2, scheme)}
+          />
         </ModalWindow>
       )}
     </TotalDataContext.Provider>
