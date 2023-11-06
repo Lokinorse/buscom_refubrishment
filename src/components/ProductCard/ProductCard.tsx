@@ -101,24 +101,16 @@ export const ProductCard = ({
     <div>
       <div className={`product_wrapper ${isProductSelected ? "chosen" : ""}`}>
         {product.image && <ImageModal image={product.image} />}
-        <div className="info">
-          <div className="title">{product.name}</div>
-          <div
-            className="description"
-            dangerouslySetInnerHTML={{
-              __html: htmlDecode(product.meta_description),
-            }}
-          />
-          {!!product.options?.length && (
-            <button
-              className={`extra_options_button ${
-                isProductSelected ? "show" : ""
-              }`}
-              onClick={() => setShowOptions(!showOptions)}
-            >
-              <div className="extra_options_btn_text">Дополнительные опции</div>
-            </button>
-          )}
+        <div className="product_card_no_img_block">
+          <div className="info">
+            <div className="title">{product.name}</div>
+            <div
+              className="description"
+              dangerouslySetInnerHTML={{
+                __html: htmlDecode(product.meta_description),
+              }}
+            />
+          </div>
           {showOptions && (
             <ModalWindow title={product.name} onClose={cancelHandler}>
               <AdditionalOptions
@@ -128,19 +120,33 @@ export const ProductCard = ({
               />
             </ModalWindow>
           )}
-        </div>
-        <div className="left_block">
-          <div className="price">{`${beautifySum(price)} ₽ ${
-            count > 1 ? `(x${count})` : ""
-          }`}</div>
-          <button
-            className={`add_button ${btnAnimationClassName}`}
-            onClick={isProductSelected ? removeProduct : addProduct}
-          >
-            <div className={`product_btn_text ${btnAnimationClassName}`}>
-              <span>Добавить</span> <span>Удалить</span>
+
+          <div className="price_and_btns">
+            <div className="price">{`${beautifySum(price)} ₽ ${
+              count > 1 ? `(x${count})` : ""
+            }`}</div>
+            <div className="product_card_btns">
+              {!!product.options?.length && (
+                <button
+                  disabled={!isProductSelected}
+                  className={`refub_btn black_white_btn  ${
+                    isProductSelected ? "show" : "hide"
+                  }`}
+                  onClick={() => setShowOptions(!showOptions)}
+                >
+                  <div className="extra_options_btn_text">Опции</div>
+                </button>
+              )}
+              <button
+                className={`refub_btn add_button ${btnAnimationClassName}`}
+                onClick={isProductSelected ? removeProduct : addProduct}
+              >
+                <div className={`product_btn_text ${btnAnimationClassName}`}>
+                  <span>Добавить</span> <span>Удалить</span>
+                </div>
+              </button>
             </div>
-          </button>
+          </div>
         </div>
       </div>
     </div>

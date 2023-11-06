@@ -103,34 +103,30 @@ export const Refubrishment = () => {
   return (
     <TotalDataContext.Provider value={{ totalData2, dispatch, scheme }}>
       <div className="wrapper">
-        <h1 style={{ margin: 0 }}>Переоборудование</h1>
-        {scheme && <TotalWidget totalPrice={totalPrice} />}
+        <h1 className="main_title">Калькулятор переоборудования</h1>
         {scheme && (
           <div
             style={{
               display: "flex",
               justifyContent: "space-between",
-              padding: "0 10px",
             }}
           >
-            <ContactButton clickHandler={() => setMakeOrderModal(true)} />
-
             <div style={{ display: "flex", alignItems: "center" }}>
-              <div>Вы выбрали схему:</div>
-              <div>&nbsp;</div>
-              <div style={{ fontWeight: "bold" }}>
-                {`${scheme.title}`} &nbsp;
+              <div className="scheme_info">
+                Вы выбрали схему: <span className="test">{scheme.title}</span>
               </div>
-              <div
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <button
                 onClick={resetSchemeHandler}
-                style={{
-                  cursor: "pointer",
-                  textDecoration: "underline",
-                  textDecorationSkipInk: "none",
-                }}
+                className="refub_btn black_white_btn"
               >
-                ( изменить )
-              </div>
+                Изменить схему
+              </button>
+              <ContactButton
+                title="Заказать звонок"
+                clickHandler={() => setMakeOrderModal(true)}
+              />
             </div>
           </div>
         )}
@@ -162,11 +158,16 @@ export const Refubrishment = () => {
               Ссылка скопирована!
             </div>
           </div>
-          <button className="url_link_btn" onClick={generateUrlHandler}>
-            Скопировать ссылку на конфигурацию
-          </button>
+          {scheme && (
+            <button className="url_link_btn" onClick={generateUrlHandler}>
+              Скопировать ссылку на конфигурацию
+            </button>
+          )}
         </div>
-        <ContactButton clickHandler={() => setMakeOrderModal(true)} />
+        <div className="calc_footer">
+          {scheme && <TotalWidget totalPrice={totalPrice} />}
+          <ContactButton clickHandler={() => setMakeOrderModal(true)} />
+        </div>
       </div>
       {makeOrderModal && (
         <ModalWindow
@@ -176,6 +177,9 @@ export const Refubrishment = () => {
           }}
         >
           <FeedbackForm
+            onClose={() => {
+              setMakeOrderModal(false);
+            }}
             totalPrice={totalPrice}
             generateConfig={() => generateUrlLink(totalData2, scheme)}
           />

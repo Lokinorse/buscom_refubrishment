@@ -1,10 +1,10 @@
 import React from "react";
 import { ReactComponent as PhoneSvg } from "../assets/svg/phone.svg";
 
-export const ContactButton = ({ clickHandler }) => {
+export const ContactButton = ({ clickHandler, title = "Сделать заказ" }) => {
   return (
-    <button className={"contact_btn"} onClick={clickHandler}>
-      Сделать заказ
+    <button className={"refub_btn contact_btn"} onClick={clickHandler}>
+      {title}
       <div className="phone_svg_wrapper">
         <PhoneSvg />
       </div>

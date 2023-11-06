@@ -63,7 +63,7 @@ export const AdditionalOptionValue = ({
 
   return (
     <div className="additional_option_value">
-      {option.name}
+      <div className="additional_opt_name">{option.name}</div>
       <Checkbox
         schemeMultiplier={schemeMultiplier}
         disabled={disabled}

@@ -34,7 +34,22 @@ export const AdditionalOptions = ({
           />
         );
       })}
-      {confirmHandler && <button onClick={confirmHandler}>Применить</button>}
+      {confirmHandler && (
+        <button
+          className="refub_btn apply_btn"
+          style={{
+            marginTop: "36px",
+            background: "#0f8e49",
+            gridColumn: "1 / 3",
+            justifySelf: "center",
+            alignSelf: "center",
+            lineHeight: "16px",
+          }}
+          onClick={confirmHandler}
+        >
+          Применить
+        </button>
+      )}
     </div>
   );
 };

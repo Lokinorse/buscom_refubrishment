@@ -25,7 +25,7 @@ export const Checkbox = ({
             <label>
               <input
                 disabled={disabled}
-                type="checkbox"
+                type="radio"
                 value={item.name}
                 checked={checkedValue === item.name}
                 onChange={() => {
@@ -34,11 +34,11 @@ export const Checkbox = ({
               />
               {`${item.name} ${beautifySum(
                 reduceNumberFromString(item.price) * schemeMultiplier
-              )}₽ ${
+              )} ₽ ${
                 item.name !== "Нет"
                   ? `(${schemeMultiplier} x ${beautifySum(
                       reduceNumberFromString(item.price)
-                    )} ₽)`
+                    )}    ₽)`
                   : ""
               }`}
             </label>

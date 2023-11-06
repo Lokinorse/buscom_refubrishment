@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-export const FeedbackForm = ({ generateConfig, totalPrice }) => {
+export const FeedbackForm = ({ onClose, generateConfig, totalPrice }) => {
+  const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -14,6 +17,7 @@ export const FeedbackForm = ({ generateConfig, totalPrice }) => {
     const order_config = generateConfig();
 
     try {
+      setLoading(true);
       const response = await axios.post(
         "https://www.bus-com.ru/index.php?route=information/refubrishment/makeOrder",
         { name, email, phone, order_config, totalPrice },
@@ -23,13 +27,21 @@ export const FeedbackForm = ({ generateConfig, totalPrice }) => {
           },
         }
       );
-
+      setLoading(false);
       if (response.status === 200) {
+        setSent(true);
+        //onClose();
         console.log("response!", response);
       } else {
+        setError(
+          "Не удалось отправить заявку! Пожалуйста, оформите заявку по телефону: \n8 800-555-85-42"
+        );
         console.error("Error:", response);
       }
     } catch (error) {
+      setError(
+        "Не удалось отправить заявку! Пожалуйста, оформите заявку по телефону: \n8 800-555-85-42"
+      );
       console.error("Network error:", error);
     }
   };
@@ -39,47 +51,61 @@ export const FeedbackForm = ({ generateConfig, totalPrice }) => {
     setFormData({ ...formData, [name]: value });
   };
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="form_group">
-        <label htmlFor="name">Имя</label>
-        <div className="required_dot" />
-        <input
-          type="text"
-          id="name"
-          name="name"
-          value={formData.name}
-          onChange={handleInputChange}
-          required
-        />
-      </div>
+    <div className="feedback_form_wrapper">
+      {!sent && !error ? (
+        <form onSubmit={handleSubmit}>
+          <div className="form_group">
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Имя*"
+              value={formData.name}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
 
-      <div className="form_group">
-        <label htmlFor="email">Email</label>
-        <div className="required_dot" />
-        <input
-          type="email"
-          id="email"
-          name="email"
-          value={formData.email}
-          onChange={handleInputChange}
-        />
-      </div>
+          <div className="form_group">
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              placeholder="Телефон*"
+              value={formData.phone}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
 
-      <div className="form_group">
-        <label htmlFor="phone">Телефон</label>
-        <input
-          type="tel"
-          id="phone"
-          name="phone"
-          value={formData.phone}
-          onChange={handleInputChange}
-          required
-        />
-      </div>
-
-      <button type="submit" className="submit_button">
-        Отправить
-      </button>
-    </form>
+          <div className="form_group">
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
+              onChange={handleInputChange}
+            />
+          </div>
+          <button
+            className="refub_btn apply_btn"
+            style={{ backgroundColor: "#0f8e49" }}
+            type="submit"
+          >
+            {loading ? "Отправка..." : "Отправить"}
+          </button>
+        </form>
+      ) : (
+        <>
+          <div className="feedback_result_info_text">
+            {error || "Ваша заявка успешно отправлена!"}
+          </div>
+          <div className="feedback_result_info_text">
+            {!error && "Наш оператор свяжется с Вами в ближайшее время!"}
+          </div>
+        </>
+      )}
+    </div>
   );
 };

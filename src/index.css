@@ -1,7 +1,28 @@
 @font-face {
   font-family: "Gilroy";
+  src: url("./assets/fonts/Gilroy-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Gilroy";
   src: url("./assets/fonts/Gilroy-Medium.ttf") format("truetype");
-  font-weight: normal;
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Gilroy";
+  src: url("./assets/fonts/Gilroy-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Gilroy";
+  src: url("./assets/fonts/Gilroy-Bold.ttf") format("truetype");
+  font-weight: 700;
   font-style: normal;
 }
 
@@ -12,9 +33,29 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+.refub_btn {
+  height: 39px;
+  padding: 13px 20px;
+  font-weight: 700;
+  font-family: "Gilroy";
+  font-size: 16px;
+  border-radius: 19px;
+}
+
+.scheme_info span {
+  font-weight: 700;
+}
+.scheme_info {
+  font-size: 28px;
+  text-align: left;
+  align-items: center;
+  max-width: 480px;
+}
+
+.main_title {
+  color: black;
+  font-size: 35px;
+  margin-bottom: 39px;
 }
 
 .total_wrapper {
@@ -28,9 +69,9 @@ code {
 
 .total_wrapper .sum_text {
   font-family: Gilroy;
-  font-size: 32px;
+  font-size: 30px;
   font-style: normal;
-  line-height: normal;
+  font-weight: 400;
 }
 
 .total {
@@ -108,6 +149,7 @@ code {
 
 .product_description {
   text-align: left;
+  font-size: 14px;
   padding: 10px;
 }
 
@@ -218,11 +260,12 @@ code {
 }
 
 .menu_item .menu_item {
-  background: #d3d3d3;
+  background: transparent;
   border-radius: 31px;
 }
 
 .menu_item .header {
+  font-size: 22px;
   display: flex;
   align-items: center;
   padding: 0 15px;
@@ -279,6 +322,12 @@ dialog {
   transform: rotate(90deg);
 }
 
+.apply_btn {
+  color: white;
+  border: none;
+  line-height: 16px;
+}
+
 .product_wrapper {
   gap: 30px;
   border-radius: 31px;
@@ -286,7 +335,16 @@ dialog {
   box-shadow: 0px 4px 18px -7px rgba(0, 0, 0, 0.5);
   display: flex;
   padding: 20px 40px;
-  justify-content: space-between;
+  transition: all 0.4s;
+}
+
+.product_card_btns {
+  display: flex;
+  gap: 10px;
+}
+
+.product_card_no_img_block {
+  width: 100%;
 }
 
 .product_wrapper .info {
@@ -306,42 +364,32 @@ dialog {
 }
 
 .price {
-  font-weight: bold;
-  flex-basis: 15%;
+  font-weight: 700;
   text-align: right;
   text-wrap: nowrap;
+  font-size: 20px;
 }
 
-.product_wrapper .left_block {
+.product_wrapper .price_and_btns {
   display: flex;
-  flex-direction: column;
+  margin-top: 20px;
   justify-content: space-between;
+  align-items: center;
 }
 
-.product_wrapper .chosen {
+.product_wrapper.chosen {
   background-color: #b3d3c2;
 }
 
-.extra_options_btn_text {
-  padding: 0 10px;
-  text-wrap: nowrap;
-}
-
-.extra_options_button {
-  opacity: 0;
-  transition: all 0.4s;
-  border-radius: 37px;
-  background: #0f8e49;
-  color: white;
-  border: none;
-  height: 32px;
-  font-size: 17px;
+.black_white_btn.show {
   cursor: pointer;
-  margin-top: auto;
+  visibility: visible;
+  opacity: 1;
 }
 
-.extra_options_button.show {
-  opacity: 1;
+.black_white_btn.hide {
+  visibility: hidden;
+  opacity: 0;
 }
 
 .url_link_btn {
@@ -349,7 +397,7 @@ dialog {
   border: none;
   color: #f27171;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
   padding: 0 10px;
   text-decoration: underline;
 }
@@ -360,20 +408,23 @@ dialog {
 
 .add_button {
   border: none;
-  border-radius: 37px;
   color: #fff;
   cursor: pointer;
-  font-size: 15px;
-  height: 32px;
   overflow: hidden;
-  width: 110px;
+  width: 115px;
+  transition: background-color 0.5s;
+}
+
+.add_button:active,
+.apply_btn:active {
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
 }
 
 .product_btn_text {
+  line-height: 16px;
   width: 200px;
   display: flex;
   justify-content: space-between;
-  padding-left: 16px;
   transition: all 0.5s;
   transform: translateX(0%);
 }
@@ -387,8 +438,36 @@ dialog {
   }
 }
 
+.black_white_btn {
+  transition: all 0.4s;
+  border: 1px solid #000;
+  display: flex;
+  align-items: center;
+  background: white;
+  color: black;
+  cursor: pointer;
+  font-size: 16px;
+  justify-content: center;
+}
+
+.calc_footer {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.feedback_result_info_text {
+  font-size: 28px;
+  white-space: pre;
+}
+
+.black_white_btn:hover {
+  background: black;
+  color: white;
+}
+
 .product_btn_text.toggle_rmv {
-  transform: translateX(-63%);
+  transform: translateX(-66%);
 }
 .product_btn_text.toggle_add {
   transform: translateX(0%);
@@ -396,11 +475,9 @@ dialog {
 
 .add_button.toggle_rmv {
   background: #b3175b;
-  transition: all 0.5s;
 }
 .add_button.toggle_add {
   background: #0f8e49;
-  transition: all 0.5s;
 }
 
 button.add_button[disabled] {
@@ -421,24 +498,39 @@ button.add_button[disabled] {
 }
 
 .product_wrapper .info .title {
-  font-size: 24px;
+  font-size: 19px;
 }
 
 .menu_item_child_wrapper {
   padding: 35px;
 }
 
-.additional_options {
+.additional_option_value {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.additional_options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  max-width: 65vw;
   padding: 10px;
+  margin-top: 20px;
+  min-width: 1000px;
 }
 
 .additional_options.disabled {
   background: #e2e1e1;
   color: grey;
 }
+
+.additional_opt_name {
+  font-size: 22px;
+  text-align: left;
+}
+
 .disabled input[type="checkbox"] {
   filter: invert(10%);
 }
@@ -446,11 +538,43 @@ button.add_button[disabled] {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  flex-direction: column;
+}
+
+.checkbox label:has(input[type="radio"]:checked):before {
+  background: url(https://bus-com.ru/catalog/view/theme/default/stylesheet/img/radio-2.png)
+    0 0 no-repeat;
+}
+
+.checkbox_label {
+  position: relative;
+  text-align: left;
+}
+
+.checkbox label:before {
+  position: absolute;
+  content: "";
+  display: inline-block;
+  width: 17px;
+  height: 18px;
+  left: 0;
+  top: 0px;
+  background: url(https://bus-com.ru/catalog/view/theme/default/stylesheet/img/radio-1.png)
+    0 0 no-repeat;
+}
+
+.checkbox input[type="radio"] {
+  display: none;
 }
 
 .checkbox_label {
   display: flex;
   flex-direction: row;
+}
+
+.checkbox label {
+  cursor: pointer;
+  margin-left: 25px;
 }
 
 .modal_window_wrapper {
@@ -468,6 +592,7 @@ button.add_button[disabled] {
 }
 
 .modal_content {
+  overflow: auto;
   position: relative;
   background: white;
   border: 1px solid #e8e2e2;
@@ -476,17 +601,19 @@ button.add_button[disabled] {
   flex-direction: column;
   gap: 15px;
   padding: 15px;
+  padding-top: 36px;
 }
 
 .modal_title {
+  font-size: 28px;
+  font-weight: 700;
   text-align: center;
-  font-size: 20px;
 }
 
 .close_button {
   position: absolute;
-  top: 5px;
-  right: 5px;
+  top: 18px;
+  right: 18px;
   cursor: pointer;
 }
 
@@ -565,15 +692,9 @@ button.add_button[disabled] {
   align-items: center;
   background: #0f8e49;
   border: none;
-  border-radius: 37px;
   color: #fff;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: 700;
-  min-height: 40px;
   justify-content: center;
-  padding: 0 10px;
-  flex-basis: 33%;
 }
 
 .phone_svg_wrapper {
@@ -612,6 +733,7 @@ button.add_button[disabled] {
 
 .form_group {
   margin-bottom: 15px;
+  width: 100%;
 }
 
 .form_group label {
@@ -620,20 +742,11 @@ button.add_button[disabled] {
 }
 
 .form_group input {
-  width: auto;
+  width: 85%;
   padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  border: 1px solid black;
+  border-radius: 20px;
   font-size: 16px;
-}
-
-.submit_button {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  cursor: pointer;
 }
 
 .copy_btn_wrapper {
@@ -655,7 +768,7 @@ button.add_button[disabled] {
   .product_wrapper {
     flex-direction: column;
   }
-  .product_wrapper .left_block {
+  .product_wrapper .price_and_btns {
     flex-direction: row-reverse;
     align-items: center;
   }
@@ -666,3 +779,15 @@ button.add_button[disabled] {
     padding: 20px 10px;
   }
 } */
+
+.feedback_form_wrapper {
+  margin-top: 21px;
+  max-width: 1000px;
+}
+.feedback_form_wrapper form {
+  display: flex;
+  flex-direction: column;
+  gap: 21px;
+  align-items: center;
+  min-width: 700px;
+}
