@@ -134,7 +134,7 @@ export const ProductCard = ({
                   }`}
                   onClick={() => setShowOptions(!showOptions)}
                 >
-                  <div className="extra_options_btn_text">Опции</div>
+                  Опции
                 </button>
               )}
               <button

@@ -105,12 +105,7 @@ export const Refubrishment = () => {
       <div className="wrapper">
         <h1 className="main_title">Калькулятор переоборудования</h1>
         {scheme && (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
+          <div className="top_control_panel">
             <div style={{ display: "flex", alignItems: "center" }}>
               <div className="scheme_info">
                 Вы выбрали схему: <span className="test">{scheme.title}</span>
