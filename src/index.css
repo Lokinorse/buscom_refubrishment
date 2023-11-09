@@ -517,7 +517,7 @@ button.add_button[disabled] {
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
   max-width: 65vw;
-  padding: 10px;
+  padding: 10px 35px;
   margin-top: 20px;
   min-width: 775px;
   max-width: 775px;
@@ -693,7 +693,14 @@ button.add_button[disabled] {
   align-items: center;
 }
 
+/* rewrite rule from other stylesheet  */
+.checkbox label,
+.radio label {
+  padding-left: 0;
+}
+
 .contact_btn {
+  text-wrap: nowrap;
   display: flex;
   align-items: center;
   background: #0f8e49;
@@ -919,6 +926,9 @@ button.add_button[disabled] {
 @media (max-width: 550px) {
   .modal_title {
     font-size: 22px;
+  }
+  .additional_options {
+    padding: 10px;
   }
   .additional_options > *:nth-child(even) {
     margin-left: 30px;
