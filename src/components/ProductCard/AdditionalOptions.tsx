@@ -9,11 +9,13 @@ import { AdditionalOptionValue } from "./AdditionalOptionValue";
  */
 
 export const AdditionalOptions = ({
+  onClose,
   confirmHandler,
   disabled,
   options,
   productId,
 }: {
+  onClose: () => void;
   confirmHandler?: () => void;
   disabled?: boolean;
   productId: string;
@@ -35,20 +37,22 @@ export const AdditionalOptions = ({
         );
       })}
       {confirmHandler && (
-        <button
-          className="refub_btn apply_btn"
-          style={{
-            marginTop: "36px",
-            background: "#0f8e49",
-            gridColumn: "1 / 3",
-            justifySelf: "center",
-            alignSelf: "center",
-            lineHeight: "16px",
-          }}
-          onClick={confirmHandler}
-        >
-          Применить
-        </button>
+        <div className="ad_options_btns_wrapper">
+          <button
+            className="refub_btn apply_btn"
+            style={{
+              background: "#0f8e49",
+              justifySelf: "center",
+              alignSelf: "center",
+            }}
+            onClick={confirmHandler}
+          >
+            Применить
+          </button>
+          <button className="refub_btn cancel_ad_options_btn" onClick={onClose}>
+            Отмена
+          </button>
+        </div>
       )}
     </div>
   );

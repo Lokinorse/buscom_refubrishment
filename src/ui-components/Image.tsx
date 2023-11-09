@@ -17,7 +17,6 @@ export function ImageModal({ image }) {
     backgroundImage: `url(https://bus-com.ru/image/${image})`,
     backgroundSize: "contain",
     backgroundPosition: "center",
-    border: "2px solid black",
     backgroundRepeat: "no-repeat",
   };
   if (!image) return null;

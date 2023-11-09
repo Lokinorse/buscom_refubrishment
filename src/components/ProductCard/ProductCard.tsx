@@ -114,6 +114,7 @@ export const ProductCard = ({
           {showOptions && (
             <ModalWindow title={product.name} onClose={cancelHandler}>
               <AdditionalOptions
+                onClose={cancelHandler}
                 confirmHandler={confirmHandler}
                 options={product.options}
                 productId={product.product_id}

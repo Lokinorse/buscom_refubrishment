@@ -111,10 +111,13 @@ export const Refubrishment = () => {
                 Вы выбрали схему: <span className="test">{scheme.title}</span>
               </div>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div
+              className="top_control_panel_btns_wrapper"
+              style={{ display: "flex", alignItems: "center", gap: "10px" }}
+            >
               <button
                 onClick={resetSchemeHandler}
-                className="refub_btn black_white_btn"
+                className="refub_btn black_white_btn chg_scheme_btn"
               >
                 Изменить схему
               </button>
